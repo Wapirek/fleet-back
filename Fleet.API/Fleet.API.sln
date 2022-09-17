@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fleet.API", "Fleet.API.csproj", "{E92E343C-793F-4B91-83DA-2F6147E63824}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fleet.Core", "..\Fleet.Core\Fleet.Core.csproj", "{F759D69F-5BDA-4F04-BB5C-5E8A68A2D8EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fleet.Infrastructure", "..\Fleet.Infrastructure\Fleet.Infrastructure.csproj", "{5D306353-C30B-44E1-A4B2-DEBF9E16F409}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E92E343C-793F-4B91-83DA-2F6147E63824}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E92E343C-793F-4B91-83DA-2F6147E63824}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E92E343C-793F-4B91-83DA-2F6147E63824}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E92E343C-793F-4B91-83DA-2F6147E63824}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F759D69F-5BDA-4F04-BB5C-5E8A68A2D8EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F759D69F-5BDA-4F04-BB5C-5E8A68A2D8EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F759D69F-5BDA-4F04-BB5C-5E8A68A2D8EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F759D69F-5BDA-4F04-BB5C-5E8A68A2D8EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D306353-C30B-44E1-A4B2-DEBF9E16F409}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D306353-C30B-44E1-A4B2-DEBF9E16F409}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D306353-C30B-44E1-A4B2-DEBF9E16F409}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D306353-C30B-44E1-A4B2-DEBF9E16F409}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
