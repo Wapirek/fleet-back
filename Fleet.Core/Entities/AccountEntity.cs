@@ -7,6 +7,8 @@ namespace Fleet.Core.Entities
     [Table("konto")]
     public class AccountEntity : BaseEntity
     {
+        #region Columns
+        
         [Column("login")]
         [Required] [StringLength(30)]
         public string Username { get; set; }
@@ -23,5 +25,7 @@ namespace Fleet.Core.Entities
 
         [Column("utworzono")]
         public DateTime Created { get; set; }
+        
+        #endregion
     }
 }
