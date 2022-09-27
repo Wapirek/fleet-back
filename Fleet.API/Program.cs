@@ -1,24 +1,31 @@
+using System;
+using Fleet.API;
+using Fleet.API.Extensions;
+using Fleet.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-var builder = WebApplication.CreateBuilder ( args );
+//var builder = WebApplication.CreateBuilder ( args );
+var host = Host.CreateDefaultBuilder ( args )
+    .ConfigureWebHostDefaults ( webBuilder => { webBuilder.UseStartup<Startup>(); } )
+    .Build();
 
-// Add services to the container.
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if( app.Environment.IsDevelopment() )
+using ( var scope = host.Services.CreateScope() )
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    var services = scope.ServiceProvider;
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-app.Run();
+    try
+    {
+        var context = services.GetRequiredService<FleetContext>();
+        await context.MigrateFleet();
+    }
+    catch ( Exception ex )
+    {
+        
+    }
+}
+    
+
+await host.RunAsync (  );

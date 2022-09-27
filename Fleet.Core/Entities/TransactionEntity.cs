@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Fleet.Core.Entities
 {
+    [Table("transakcja")]
     public class TransactionEntity : BaseEntity
     {
         #region Columns
