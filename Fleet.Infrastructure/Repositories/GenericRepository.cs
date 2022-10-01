@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Fleet.Core.Entities;
 using Fleet.Core.Interfaces.Repositories;
+using Fleet.Core.Specifications;
 using Fleet.Infrastructure.Data;
 
 namespace Fleet.Infrastructure.Repositories
@@ -46,6 +48,20 @@ namespace Fleet.Infrastructure.Repositories
         public void Delete( T entity )
         {
             _context.Set<T>().Remove ( entity );
+        }
+        
+        #endregion
+        
+        #region Private Methods
+
+        /// <summary>
+        /// Zbiera wszyskie specyfikacje do zapytania z tabeli T
+        /// </summary>
+        /// <param name="spec">Zbiór ustawionych metod SQL</param>
+        /// <returns>Kompletne zapytanie SQL</returns>
+        private IQueryable<T> ApplySpecification( ISpecification<T> spec )
+        {
+            return SpecificationEvaluator<T>.GetQuery ( _context.Set<T>().AsQueryable(), spec );
         }
         
         #endregion
