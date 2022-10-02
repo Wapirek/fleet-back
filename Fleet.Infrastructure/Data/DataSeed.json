@@ -1,0 +1,141 @@
+{
+    "account": {
+        "username": "Odom",
+        "email": "odomhorn@artiq.com"
+    },
+    "catalogs": [
+        {
+            "catalogName": "żywność",
+            "accountId": 1
+        },
+        {
+            "catalogName": "napoje",
+            "accountId": 1
+        },
+        {
+            "catalogName": "używki",
+            "accountId": 1
+        },
+        {
+            "catalogName": "słodycze",
+            "accountId": 1
+        },
+        {
+            "catalogName": "środki czystości",
+            "accountId": 1
+        },
+        {
+            "catalogName": "elektronika",
+            "accountId": 1
+        }
+    ],
+    "products": [
+        {
+            "productName": "Jogurt",
+            "seller": "Biedronka",
+            "price": 5,
+            "unit": "szt",
+            "catalogId": 1
+        },
+        {
+            "productName": "Chleb",
+            "seller": "Biedronka",
+            "price": 15,
+            "unit": "szt",
+            "catalogId": 1
+        },
+        {
+            "productName": "Piwo",
+            "seller": "Żabka",
+            "price": 5,
+            "unit": "szt",
+            "catalogId": 3
+        },
+        {
+            "productName": "Domestos",
+            "seller": "Biedronka",
+            "price": 25,
+            "unit": "szt",
+            "catalogId": 5
+        },
+        {
+            "productName": "Chusteczki",
+            "seller": "Biedronka",
+            "price": 1,
+            "unit": "szt",
+            "catalogId": 5
+        },
+        {
+            "productName": "Lemoniada",
+            "seller": "Biedronka",
+            "price": 8,
+            "unit": "szt",
+            "catalogId": 2
+        },
+        {
+            "productName": "Pryncypałki",
+            "seller": "Biedronka",
+            "price": 6,
+            "unit": "szt",
+            "catalogId": 4
+        },
+        {
+            "productName": "Kabel HDMI",
+            "seller": "Ikea",
+            "price": 65,
+            "unit": "szt",
+            "catalogId": 6
+        },
+        {
+            "productName": "Słuchawki douszne",
+            "seller": "Media Expert",
+            "price": 235,
+            "unit": "szt",
+            "catalogId": 6
+        },
+        {
+            "productName": "Lampa nocna",
+            "seller": "Media Expert",
+            "price": 175,
+            "unit": "szt",
+            "catalogId": 6
+        }
+    ],
+    "transactions": [
+        {
+            "quantity": 4,
+            "transactionDate": "2022-10-02",
+            "currency": "PLN",
+            "paid": 20,
+            "productId": 3
+        },
+        {
+            "quantity": 2,
+            "transactionDate": "2022-10-02",
+            "currency": "PLN",
+            "paid": 12,
+            "productId": 7
+        },
+        {
+            "quantity": 1,
+            "transactionDate": "2022-10-01",
+            "currency": "PLN",
+            "paid": 235,
+            "productId": 9
+        },
+        {
+            "quantity": 10,
+            "transactionDate": "2022-10-01",
+            "currency": "PLN",
+            "paid": 50,
+            "productId": 1
+        },
+        {
+            "quantity": 2,
+            "transactionDate": "2022-10-01",
+            "currency": "PLN",
+            "paid": 30,
+            "productId": 2
+        }
+    ]
+}

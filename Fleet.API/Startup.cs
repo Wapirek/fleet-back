@@ -24,8 +24,7 @@ namespace Fleet.API
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
-            var connectionString = "Server=localhost;Port=3306;Database=fleet;User=root;Password=";
-            // _config.GetConnectionString ( "FleetConnection" )
+            var connectionString = _config.GetConnectionString ( "FleetConnection" );//"Server=localhost;Port=3306;Database=fleet;User=root;Password=";
             var serverVersion = new MariaDbServerVersion ( new Version ( 10, 4, 20 ) );
             services.AddDbContext<FleetContext> ( x => x.UseMySql (
                 connectionString , serverVersion ) );
