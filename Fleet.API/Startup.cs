@@ -1,4 +1,5 @@
 ﻿using System;
+using Fleet.API.Extensions;
 using Fleet.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,10 +25,13 @@ namespace Fleet.API
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
-            var connectionString = _config.GetConnectionString ( "FleetConnection" );//"Server=localhost;Port=3306;Database=fleet;User=root;Password=";
+            var connectionString = _config.GetConnectionString ( "FleetConnection" );
             var serverVersion = new MariaDbServerVersion ( new Version ( 10, 4, 20 ) );
             services.AddDbContext<FleetContext> ( x => x.UseMySql (
                 connectionString , serverVersion ) );
+            
+            services.AddApplicationServices();
+            services.AddIdentityService ( _config );
         }
         
         public void Configure( IApplicationBuilder app, IWebHostEnvironment env )
