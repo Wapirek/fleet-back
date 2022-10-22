@@ -24,4 +24,4 @@ FROM base AS final
 WORKDIR /app
 
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Fleet.API.dll"]
+ENTRYPOINT ["dotnet", "/app/Fleet.API.dll"]

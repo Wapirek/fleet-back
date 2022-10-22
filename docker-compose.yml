@@ -2,7 +2,7 @@ version: "3.7"
 services:
 
     server:
-      image: wiotrek/fleet-back:1
+      image: wiotrek/fleet-back:latest
       depends_on:
         - mysql
       volumes:
