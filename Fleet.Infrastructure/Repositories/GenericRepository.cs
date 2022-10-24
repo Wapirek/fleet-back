@@ -4,6 +4,7 @@ using Fleet.Core.Entities;
 using Fleet.Core.Interfaces.Repositories;
 using Fleet.Core.Specifications;
 using Fleet.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fleet.Infrastructure.Repositories
 {
@@ -33,6 +34,11 @@ namespace Fleet.Infrastructure.Repositories
         public async Task<T> GetByIdAsync( int id )
         {
             return (await _context.Set<T>().FindAsync ( id ))!;
+        }
+
+        public async Task<T> GetEntityWithSpecAsync( ISpecification<T> spec )
+        {
+            return await ApplySpecification ( spec ).FirstOrDefaultAsync();
         }
 
         public void Add( T entity )

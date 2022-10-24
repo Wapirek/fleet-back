@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Fleet.Core.Entities;
+using Fleet.Core.Specifications;
 
 namespace Fleet.Core.Interfaces.Repositories
 {
@@ -15,6 +16,13 @@ namespace Fleet.Core.Interfaces.Repositories
         /// <param name="id">Klucz główny tabeli T</param>
         /// <returns>Wiersz tabeli o danym id</returns>
         Task<T> GetByIdAsync( int id );
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="spec"></param>
+        /// <returns></returns>
+        Task<T> GetEntityWithSpecAsync( ISpecification<T> spec );
         
         /// <summary>
         /// Przechowuje lokalnie rekord w tabeli przed zapisem do bazy danych
