@@ -1,10 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
-ENV ASPNETCORE_URLS=http://+:8010
-
-EXPOSE 8010
-
 # copy csproj and restore as distinct layers
 COPY Fleet.API/*.sln .
 
