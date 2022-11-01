@@ -2,12 +2,21 @@
 using Fleet.Core.ApiModels;
 using Fleet.Core.Dtos;
 using Fleet.Core.Dtos.Responser;
-using Fleet.Core.Entities;
 using Fleet.Core.Interfaces.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fleet.API.Controllers
 {
+    public class AuthorizeTokenAttribute : AuthorizeAttribute
+    {
+        public AuthorizeTokenAttribute()
+        {
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme;
+        }
+    }
+    
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
@@ -21,24 +30,35 @@ namespace Fleet.API.Controllers
             _tokenService = tokenService;
         }
         
-        [HttpPost ( "login" )]
+        [HttpGet ( "login" )]
         public async Task<ActionResult<LoginResultDto>> LoginAsync ([FromBody] LoginDto loginDto)
         {
+            //await HttpContext.SignOutAsync ( IdentityConstants.ApplicationScheme );
+            loginDto.Login = "Odom";
+            loginDto.Password = "Password";
             var user = await _accService.GetUserByNameAsync ( loginDto.Login );
             if( user == null ) return Unauthorized ( new ApiResponse ( 401, "Nie poprawny login lub hasło" ) );
 
             if( _accService.CheckPasswordAsync ( user, loginDto.Password ) )
                 return Unauthorized ( new ApiResponse ( 401, "Nie poprawny login lub hasło" ) );
 
+            
             var response = new ApiResponse<LoginResultDto> ( 200, 
                 "Zalogowano pomyślnie", 
                 new LoginResultDto
             {
                 Email = user.Email,
-                Token = _tokenService.CreateToken ( user )
+                Token = await _tokenService.CreateToken ( user )
             });
             
             return Ok ( response );
+        }
+
+        [AuthorizeToken]
+        [HttpGet ( "test" )]
+        public ActionResult TestAsync()
+        {
+            return Ok();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Fleet.Core.Entities
         
         #region Relations
         
-        public ICollection<ProductEntity> Produts { get; set; }
+        public ICollection<ProductEntity>? Produts { get; set; }
 
         public int AccountId { get; set; }
         public AccountEntity Account { get; set; }

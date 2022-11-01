@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using AutoMapper;
+using Fleet.Infrastructure.Helpers;
 
 namespace Fleet.API
 {
@@ -29,7 +31,8 @@ namespace Fleet.API
             var serverVersion = new MariaDbServerVersion ( new Version ( 10, 4, 20 ) );
             services.AddDbContext<FleetContext> ( x => x.UseMySql (
                 connectionString , serverVersion ) );
-            
+
+            services.AddAutoMapper ( typeof(MappingProfiles) );
             services.AddApplicationServices();
             services.AddIdentityService ( _config );
         }
@@ -51,6 +54,8 @@ namespace Fleet.API
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCookiePolicy();
 
             app.UseEndpoints ( endpoints => { endpoints.MapControllers(); } );
         }

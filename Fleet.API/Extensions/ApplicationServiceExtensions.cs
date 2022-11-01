@@ -14,6 +14,7 @@ namespace Fleet.API.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ICatalogService, CatalogService>();
         }
     }
 }
