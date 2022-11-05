@@ -1,8 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Fleet.Core.ApiModels;
+using Fleet.Core.Dtos;
+using Fleet.Core.Dtos.Responser;
 using Fleet.Core.Entities;
 using Fleet.Core.Interfaces.Repositories;
 using Fleet.Core.Interfaces.Services;
@@ -12,12 +17,25 @@ namespace Fleet.Infrastructure.Services
 {
     public class AccountService : IAccountService
     {
+        #region Private Members
+        
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITokenService _tokenService;
 
-        public AccountService(IUnitOfWork unitOfWork)
+        #endregion
+        
+        #region Constructors
+        
+        public AccountService(IUnitOfWork unitOfWork,
+            ITokenService tokenService)
         {
             _unitOfWork = unitOfWork;
+            _tokenService = tokenService;
         }
+        
+        #endregion
+        
+        #region Implemented Methods
 
         public async Task<AccountEntity> GetUserByNameAsync( string login )
         {
@@ -31,6 +49,62 @@ namespace Fleet.Infrastructure.Services
         {
             return !VerifyPasswordHash ( password, account.Hash, account.PasswordSalt );
         }
+
+        public async Task<ApiResponse<LoginResultDto>> CreateUser( RegisterDto registerDto )
+        {
+            #region Validate
+            
+            if( registerDto.Password.Length < 5 )
+                return new ApiResponse<LoginResultDto> ( 404, "Wymagana ilość znaków na hasło: 5", null );
+            
+            if( string.IsNullOrEmpty ( registerDto.Login ) )
+                return new ApiResponse<LoginResultDto> ( 404, "Nie uzupełniono nazwy użytkownika", null );
+
+            MailAddress? mail;
+            var isEmailCorrect = MailAddress.TryCreate( registerDto.Email, out mail );
+
+            if( !isEmailCorrect )
+                return new ApiResponse<LoginResultDto> ( 404, "Nie poprawny format maila", null );
+            
+            #endregion
+            
+            #region Creating
+            
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHashSalt( registerDto.Password, out passwordHash, out passwordSalt );
+
+            var user = new AccountEntity
+            {
+                Username = registerDto.Login,
+                Created = DateTime.Now,
+                Email = registerDto.Email,
+                Hash = passwordHash,
+                PasswordSalt = passwordSalt
+            };
+
+            _unitOfWork.Repository<AccountEntity>().Add ( user );
+            var result = await _unitOfWork.CompleteAsync();
+
+            #endregion
+
+            #region Return Result
+            
+            if( result > 0 )
+            {
+                return new ApiResponse<LoginResultDto> ( 200, "", 
+                    new LoginResultDto
+                    {
+                        Email = user.Email,
+                        Token = await _tokenService.CreateToken ( user )
+                    });
+            }
+            
+            return new ApiResponse<LoginResultDto> ( 401, "Nie powiodło się tworzenie użytkownika", null );
+            
+            #endregion
+        }
+
+        #endregion
         
         #region Private Methods
         
