@@ -35,6 +35,14 @@ namespace Fleet.API
             services.AddAutoMapper ( typeof(MappingProfiles) );
             services.AddApplicationServices();
             services.AddIdentityService ( _config );
+            
+            services.AddCors ( opt =>
+            {
+                opt.AddPolicy ( "CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins ( "http://localhost:5131" );
+                } );
+            } );
         }
         
         public void Configure( IApplicationBuilder app, IWebHostEnvironment env )

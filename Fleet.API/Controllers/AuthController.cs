@@ -30,7 +30,7 @@ namespace Fleet.API.Controllers
             _tokenService = tokenService;
         }
         
-        [HttpGet ( "login" )]
+        [HttpPost ( "login" )]
         public async Task<ActionResult<LoginResultDto>> LoginAsync ([FromBody] LoginDto loginDto)
         {
             var user = await _accService.GetUserByNameAsync ( loginDto.Login );
@@ -51,9 +51,9 @@ namespace Fleet.API.Controllers
             return Ok ( response );
         }
 
-        [AuthorizeToken]
-        [HttpGet ( "test" )]
-        public ActionResult TestAsync()
+        
+        [HttpGet ( "register" )]
+        public ActionResult RegisterAsync()
         {
             return Ok();
         }
