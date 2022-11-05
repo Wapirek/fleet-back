@@ -33,9 +33,6 @@ namespace Fleet.API.Controllers
         [HttpGet ( "login" )]
         public async Task<ActionResult<LoginResultDto>> LoginAsync ([FromBody] LoginDto loginDto)
         {
-            //await HttpContext.SignOutAsync ( IdentityConstants.ApplicationScheme );
-            loginDto.Login = "Odom";
-            loginDto.Password = "Password";
             var user = await _accService.GetUserByNameAsync ( loginDto.Login );
             if( user == null ) return Unauthorized ( new ApiResponse ( 401, "Nie poprawny login lub hasło" ) );
 
