@@ -40,7 +40,7 @@ namespace Fleet.API
             {
                 opt.AddPolicy ( "CorsPolicy", policy =>
                 {
-                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins ( "http://localhost:5131" );
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins ( "*" );
                 } );
             } );
         }

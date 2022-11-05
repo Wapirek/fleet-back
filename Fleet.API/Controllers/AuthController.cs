@@ -52,9 +52,12 @@ namespace Fleet.API.Controllers
         }
 
         
-        [HttpGet ( "register" )]
-        public ActionResult RegisterAsync()
+        [HttpPost ( "register" )]
+        public async Task<ActionResult<LoginResultDto>> RegisterAsync([FromBody] RegisterDto registerDto)
         {
+            var user = await _accService.GetUserByNameAsync ( registerDto.Login );
+            if( user == null ) return Unauthorized ( new ApiResponse ( 401, "Nie poprawny login lub hasło" ) );
+            
             return Ok();
         }
     }
