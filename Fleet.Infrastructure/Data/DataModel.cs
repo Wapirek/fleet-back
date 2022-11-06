@@ -9,5 +9,6 @@ namespace Fleet.Infrastructure.Data
         public List<CatalogEntity> Catalogs { get; set; }
         public List<ProductEntity> Products { get; set; }
         public List<TransactionEntity> Transactions { get; set; }
+        public UserProfileEntity UserProfile { get; set; }
     }
 }

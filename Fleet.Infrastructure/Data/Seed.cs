@@ -43,6 +43,12 @@ namespace Fleet.Infrastructure.Data
             
             #endregion
             
+            #region User Profile
+
+            _context.UserProfile.Add ( model.UserProfile );
+            
+            #endregion
+            
             #region Catalogs
 
             foreach ( var catalog in model.Catalogs )

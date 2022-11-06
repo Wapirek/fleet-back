@@ -91,6 +91,15 @@ namespace Fleet.Infrastructure.Services
             
             if( result > 0 )
             {
+                // powiąż konto do profilu użytkownika
+                var userProfile = new UserProfileEntity
+                {
+                    AccountId = user.Id,
+                    AccountBalance = 0
+                };
+                _unitOfWork.Repository<UserProfileEntity>().Add ( userProfile );
+                await _unitOfWork.CompleteAsync();
+                
                 return new ApiResponse<LoginResultDto> ( 200, "", 
                     new LoginResultDto
                     {

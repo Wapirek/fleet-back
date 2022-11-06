@@ -3,6 +3,10 @@
         "username": "Odom",
         "email": "odomhorn@artiq.com"
     },
+    "userProfile": {
+        "AccountBalance": 0,
+        "accountId": 1
+    },
     "catalogs": [
         {
             "catalogName": "żywność",
