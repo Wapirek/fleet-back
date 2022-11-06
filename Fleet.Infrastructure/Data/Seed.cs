@@ -49,6 +49,17 @@ namespace Fleet.Infrastructure.Data
             
             #endregion
             
+            #region Incomes
+            
+            foreach ( var income in model.Incomes )
+            {
+                income.Account = model.Account;
+                income.NextIncome = DateTime.Now.AddDays ( income.PeriodicityDay );
+                _context.Incomes.Add ( income );
+            }
+            
+            #endregion
+            
             #region Catalogs
 
             foreach ( var catalog in model.Catalogs )

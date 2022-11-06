@@ -4,9 +4,23 @@
         "email": "odomhorn@artiq.com"
     },
     "userProfile": {
-        "AccountBalance": 0,
+        "accountBalance": 0,
         "accountId": 1
     },
+    "incomes": [
+        {
+            "Income": 5000,
+            "source": "Praca",
+            "periodicityDay": 30,
+            "accountId": 1
+        },
+        {
+            "Income": 700,
+            "source": "Zlecenie",
+            "periodicityDay": 7,
+            "accountId": 1
+        }
+    ],
     "catalogs": [
         {
             "catalogName": "żywność",

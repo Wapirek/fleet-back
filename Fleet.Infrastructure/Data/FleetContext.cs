@@ -10,6 +10,7 @@ namespace Fleet.Infrastructure.Data
         public DbSet<ProductEntity> Products { get; set; }
         public DbSet<TransactionEntity> Transactions { get; set; }
         public DbSet<UserProfileEntity> UserProfile { get; set; }
+        public DbSet<IncomeEntity> Incomes { get; set; }
 
         public FleetContext(DbContextOptions<FleetContext> options) : base(options)
         {
