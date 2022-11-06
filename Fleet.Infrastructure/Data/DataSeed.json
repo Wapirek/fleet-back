@@ -9,14 +9,28 @@
     },
     "incomes": [
         {
-            "Income": 5000,
+            "income": 5000,
             "source": "Praca",
             "periodicityDay": 30,
             "accountId": 1
         },
         {
-            "Income": 700,
+            "income": 700,
             "source": "Zlecenie",
+            "periodicityDay": 7,
+            "accountId": 1
+        }
+    ],
+    "outcomes": [
+        {
+            "outcome": 1700,
+            "source": "Wynajem",
+            "periodicityDay": 30,
+            "accountId": 1
+        },
+        {
+            "outcome": 40,
+            "source": "Premium account w Taern",
             "periodicityDay": 7,
             "accountId": 1
         }

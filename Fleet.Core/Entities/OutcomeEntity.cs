@@ -4,35 +4,35 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Fleet.Core.Entities
 {
     /// <summary>
-    /// Stałe lub tymczasowe przychody użytkownika
+    /// Stałe lub tymczasowe opłaty użytkownika
     /// </summary>
-    [Table("przychody_użytkownika")]
-    public class IncomeEntity : BaseEntity
+    [Table("opłaty_użytkownika")]
+    public class OutcomeEntity : BaseEntity
     {
         #region Columns
 
-        [Column("kwota_przychodu")]
-        public double Income { get; set; }
+        [Column("kwota_płatności")]
+        public double Outcome { get; set; }
 
         [Column("Źródło")]
         public string Source { get; set; }
-
+        
         /// <summary>
-        /// Co ile dni wpływają na konto środki pieniężne
+        /// Co ile dni wykonywana jest płatność
         /// </summary>
         [Column("cykliczność_dni")]
         public int PeriodicityDay { get; set; }
 
         /// <summary>
-        /// Data kolejnego wpływu danego środku pieniężnego
+        /// Data kolejnego płatności
         /// </summary>
-        [Column("kolejny_przychód")]
-        public DateTime NextIncome { get; set; }
-
+        [Column("kolejna_płatność")]
+        public DateTime NextOutcome { get; set; }
+        
         #endregion
         
         #region Relations
-
+        
         public AccountEntity Account { get; set; }
         public int AccountId { get; set; }
         

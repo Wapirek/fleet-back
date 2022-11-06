@@ -60,6 +60,17 @@ namespace Fleet.Infrastructure.Data
             
             #endregion
             
+            #region Outcomes
+            
+            foreach ( var outcome in model.Outcomes )
+            {
+                outcome.Account = model.Account;
+                outcome.NextOutcome = DateTime.Now.AddDays ( outcome.PeriodicityDay );
+                _context.Outcomes.Add ( outcome );
+            }
+            
+            #endregion
+            
             #region Catalogs
 
             foreach ( var catalog in model.Catalogs )
