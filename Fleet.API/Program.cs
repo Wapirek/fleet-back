@@ -1,6 +1,7 @@
 using System;
 using Fleet.API;
 using Fleet.API.Extensions;
+using Fleet.Core.Commands;
 using Fleet.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,7 @@ using ( var scope = host.Services.CreateScope() )
         await context.MigrateFleet();
         var seed = new Seed ( context );
         seed.SeedData();
+        services.UpdateUserAccountBalance();
     }
     catch ( Exception ex )
     {

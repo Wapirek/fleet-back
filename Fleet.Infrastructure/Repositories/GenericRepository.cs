@@ -55,7 +55,12 @@ namespace Fleet.Infrastructure.Repositories
         {
             _context.Set<T>().Remove ( entity );
         }
-        
+
+        public async Task ExecuteNonQuery( string query )
+        {
+            await _context.Database.ExecuteSqlRawAsync ( query );
+        }
+
         #endregion
         
         #region Private Methods

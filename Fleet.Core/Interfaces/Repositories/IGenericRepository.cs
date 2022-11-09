@@ -41,5 +41,7 @@ namespace Fleet.Core.Interfaces.Repositories
         /// </summary>
         /// <param name="entity"></param>
         void Delete( T entity );
+
+        Task ExecuteNonQuery( string query );
     }
 }
