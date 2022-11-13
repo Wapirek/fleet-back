@@ -9,11 +9,23 @@ namespace Fleet.Infrastructure.Helpers
         public MappingProfiles()
         {
             CatalogForCatalogDto();
+            IncomeDtoForIncome();
+            IncomeForIncomeDto();
         }
         
         private void CatalogForCatalogDto()
         {
             CreateMap<CatalogEntity, CatalogDto>();
+        }
+
+        private void IncomeDtoForIncome()
+        {
+            CreateMap<IncomeEntity, IncomeDto>().ReverseMap();
+        }
+        
+        private void IncomeForIncomeDto()
+        {
+            CreateMap<IncomeEntity, IncomeDto>();
         }
     }
 }

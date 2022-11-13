@@ -37,7 +37,7 @@ namespace Fleet.Core.ApiModels
     /// Odpowiedź zwrotna z dołączonymi danymi konkretnego typu
     /// </summary>
     /// <typeparam name="T">Typ danych do odpowiedzi</typeparam>
-    public class ApiResponse<T> : ApiResponse where T : BaseDto
+    public class ApiResponse<T> : ApiResponse// where T : BaseDto
     {
         /// <summary>
         /// Obiekt odpowiedzi zwrotnej

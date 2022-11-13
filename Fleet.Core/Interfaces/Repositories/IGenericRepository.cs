@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Fleet.Core.Entities;
 using Fleet.Core.Specifications;
 
@@ -11,11 +12,18 @@ namespace Fleet.Core.Interfaces.Repositories
     public interface IGenericRepository<T> where T : BaseEntity
     {
         /// <summary>
-        /// Select * from T where columnId = id
+        /// Select * from T where columnId = id limit 1
         /// </summary>
         /// <param name="id">Klucz główny tabeli T</param>
         /// <returns>Wiersz tabeli o danym id</returns>
         Task<T> GetByIdAsync( int id );
+
+        /// <summary>
+        /// Select * from T where column = spec
+        /// </summary>
+        /// <param name="id">Klucz główny tabeli T</param>
+        /// <returns>Wiersz tabeli o danym id</returns>
+        Task<IReadOnlyList<T>> ListAsync( ISpecification<T> spec );
 
         /// <summary>
         /// 

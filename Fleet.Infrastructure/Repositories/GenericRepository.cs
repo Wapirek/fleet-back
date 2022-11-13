@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Fleet.Core.Entities;
 using Fleet.Core.Interfaces.Repositories;
@@ -34,6 +35,11 @@ namespace Fleet.Infrastructure.Repositories
         public async Task<T> GetByIdAsync( int id )
         {
             return (await _context.Set<T>().FindAsync ( id ))!;
+        }
+
+        public async Task<IReadOnlyList<T>> ListAsync( ISpecification<T> spec )
+        {
+            return await ApplySpecification ( spec ).ToListAsync();
         }
 
         public async Task<T> GetEntityWithSpecAsync( ISpecification<T> spec )
