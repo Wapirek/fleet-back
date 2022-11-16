@@ -8,17 +8,17 @@ namespace Fleet.Core.Interfaces.Services
 {
     public interface IUserProfileService
     {
-        Task<ApiResponse<IncomeDto>> CreateIncomeAsync( IncomeDto income );
-        Task<ApiResponse<IncomeDto>> UpdateIncomeAsync( IncomeDto income );
-        Task<ApiResponse> DeleteIncome( IncomeLittleDto income );
+        Task<ApiResponse<CashFlowDto>> CreateCashFlowAsync( CashFlowDto cashFlow );
+        Task<ApiResponse<CashFlowDto>> UpdateCashFlowAsync( CashFlowDto cashFlow );
+        Task<ApiResponse> DeleteCashFlowAsync( CashFlowLittleDto cashFlow );
         
         /// <summary>
         /// Aktualizuje stan konta użytkownika na podstawie stałych wpływów i opłat
         /// </summary>
         Task UpdateAccountBalanceAsync();
 
-        Task<IncomeEntity> GetIncomeAsync( string source, int accountId );
+        Task<CashFlowEntity> GetCashFlowAsync( string source, int accountId );
 
-        Task<IReadOnlyList<IncomeDto>> GetIncomesAsync( int accountId );
+        Task<IReadOnlyList<CashFlowDto>> GetCashFlowsAsync( int accountId );
     }
 }

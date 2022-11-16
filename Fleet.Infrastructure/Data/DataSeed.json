@@ -7,31 +7,33 @@
         "accountBalance": 0,
         "accountId": 1
     },
-    "incomes": [
+    "cashFlows": [
         {
-            "income": 5000,
+            "charge": 5000,
             "source": "Praca",
             "periodicityDay": 30,
+            "cashFlowKind": "Przychód",
             "accountId": 1
         },
         {
-            "income": 700,
+            "charge": 700,
             "source": "Zlecenie",
             "periodicityDay": 7,
-            "accountId": 1
-        }
-    ],
-    "outcomes": [
-        {
-            "outcome": 1700,
-            "source": "Wynajem",
-            "periodicityDay": 30,
+            "cashFlowKind": "Przychód",
             "accountId": 1
         },
         {
-            "outcome": 40,
+            "charge": 1700,
+            "source": "Wynajem",
+            "periodicityDay": 30,
+            "cashFlowKind": "Płatność",
+            "accountId": 1
+        },
+        {
+            "charge": 40,
             "source": "Premium account w Taern",
             "periodicityDay": 7,
+            "cashFlowKind": "Płatność",
             "accountId": 1
         }
     ],

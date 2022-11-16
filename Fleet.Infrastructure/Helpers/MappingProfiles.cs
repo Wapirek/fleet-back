@@ -20,12 +20,12 @@ namespace Fleet.Infrastructure.Helpers
 
         private void IncomeDtoForIncome()
         {
-            CreateMap<IncomeEntity, IncomeDto>().ReverseMap();
+            CreateMap<CashFlowEntity, CashFlowDto>().ReverseMap();
         }
         
         private void IncomeForIncomeDto()
         {
-            CreateMap<IncomeEntity, IncomeDto>();
+            CreateMap<CashFlowEntity, CashFlowDto>();
         }
     }
 }

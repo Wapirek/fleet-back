@@ -10,7 +10,6 @@ namespace Fleet.Infrastructure.Data
         public List<ProductEntity> Products { get; set; }
         public List<TransactionEntity> Transactions { get; set; }
         public UserProfileEntity UserProfile { get; set; }
-        public List<IncomeEntity> Incomes { get; set; }
-        public List<OutcomeEntity> Outcomes { get; set; }
+        public List<CashFlowEntity> CashFlows { get; set; }
     }
 }

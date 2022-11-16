@@ -48,25 +48,14 @@ namespace Fleet.Infrastructure.Data
             _context.UserProfile.Add ( model.UserProfile );
             
             #endregion
+
+            #region CashFlows
             
-            #region Incomes
-            
-            foreach ( var income in model.Incomes )
+            foreach ( var cashFlow in model.CashFlows )
             {
-                income.Account = model.Account;
-                income.NextIncome = DateTime.Now.AddDays ( income.PeriodicityDay );
-                _context.Incomes.Add ( income );
-            }
-            
-            #endregion
-            
-            #region Outcomes
-            
-            foreach ( var outcome in model.Outcomes )
-            {
-                outcome.Account = model.Account;
-                outcome.NextOutcome = DateTime.Now.AddDays ( outcome.PeriodicityDay );
-                _context.Outcomes.Add ( outcome );
+                cashFlow.Account = model.Account;
+                cashFlow.NextCashFlow = DateTime.Now.AddDays ( cashFlow.PeriodicityDay );
+                _context.CashFlows.Add ( cashFlow );
             }
             
             #endregion

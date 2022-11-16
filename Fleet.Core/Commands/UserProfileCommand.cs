@@ -11,7 +11,7 @@ namespace Fleet.Core.Commands
             services.UseScheduler ( scheduler =>
             {
                 var job = scheduler.Schedule<UserProfileProcess>();
-                job.Daily();
+                job.Hourly();
             } );
         }
     }

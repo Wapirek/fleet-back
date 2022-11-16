@@ -10,4 +10,8 @@
       <PackageReference Include="Coravel" Version="4.1.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Extensions" />
+    </ItemGroup>
+
 </Project>

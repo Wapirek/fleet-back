@@ -29,46 +29,46 @@ namespace Fleet.Infrastructure.Services
         {
             var updateIncomeQuery =
                 "UPDATE profil_użytkownika pu " +
-                "LEFT JOIN przychody_użytkownika prz ON prz.AccountId = pu.AccountId " +
+                "LEFT JOIN przepływy_pieniężne pp ON pp.AccountId = pu.AccountId " +
                 "SET stan_konta = stan_konta + " +
-                "   (SELECT SUM(kwota_przychodu) FROM przychody_użytkownika prz1 " +
-                "   WHERE date(kolejny_przychód) = current_date and prz.AccountId = prz1.AccountId), " +
-                "   kolejny_przychód = date_add(kolejny_przychód, interval cykliczność_dni DAY) " +
-                "WHERE date(kolejny_przychód) = current_date";
+                "   (SELECT SUM(obciążenie) FROM przepływy_pieniężne pp1 " +
+                "   WHERE date(kolejny_przepływ) = current_date and pp.AccountId = pp1.AccountId) AND rodzaj_przepływu = 'Przychód', " +
+                "   kolejny_przepływ = date_add(kolejny_przepływ, interval cykliczność_dni DAY) " +
+                "WHERE date(kolejny_przepływ) = current_date";
             
 
             var updateOutcomeQuery =
                 "UPDATE profil_użytkownika pu " +
-                "LEFT JOIN opłaty_użytkownika opl ON opl.AccountId = pu.AccountId " +
+                "LEFT JOIN przepływy_pieniężne pp ON pp.AccountId = pu.AccountId " +
                 "SET stan_konta = stan_konta - " +
-                "   (SELECT SUM(opl1.kwota_płatności) FROM opłaty_użytkownika opl1 " +
-                "   WHERE date(opl1.kolejna_płatność) = current_date and opl.AccountId = opl1.AccountId), " +
-                "   kolejna_płatność = date_add(kolejna_płatność, interval cykliczność_dni DAY) " +
-                "WHERE date(kolejna_płatność) = current_date";
+                "   (SELECT SUM(pp1.obciążenie) FROM przepływy_pieniężne pp1 " +
+                "   WHERE date(pp1.kolejny_przepływ) = current_date and pp1.AccountId = pp1.AccountId)  AND rodzaj_przepływu = 'Płatność', " +
+                "   kolejny_przepływ = date_add(kolejny_przepływ, interval cykliczność_dni DAY) " +
+                "WHERE date(kolejny_przepływ) = current_date";
             
             await _unitOfWork.Repository<UserProfileEntity>().ExecuteNonQuery ( updateIncomeQuery );
             await _unitOfWork.Repository<UserProfileEntity>().ExecuteNonQuery ( updateOutcomeQuery );
         }
 
-        public async Task<ApiResponse<IncomeDto>> CreateIncomeAsync( IncomeDto incomeDto )
+        public async Task<ApiResponse<CashFlowDto>> CreateCashFlowAsync( CashFlowDto cashFlowDto )
         {
-            var validateResult = await Validate ( incomeDto, EOperationEntity.Add );
+            var validateResult = await Validate ( cashFlowDto, EOperationEntity.Add );
             if( !string.IsNullOrEmpty ( validateResult ) )
-                return new ApiResponse<IncomeDto> ( 400, validateResult, null );
+                return new ApiResponse<CashFlowDto> ( 400, validateResult, null );
             
-            var income = _map.Map<IncomeEntity> ( incomeDto );
-            _unitOfWork.Repository<IncomeEntity>().Add ( income );
+            var cashFlow = _map.Map<CashFlowEntity> ( cashFlowDto );
+            _unitOfWork.Repository<CashFlowEntity>().Add ( cashFlow );
 
             var result = await _unitOfWork.CompleteAsync();
-            return result > 0 ? new ApiResponse<IncomeDto>(200, "", incomeDto) : null;
+            return result > 0 ? new ApiResponse<CashFlowDto>(200, "", cashFlowDto) : null;
         }
 
-        public async Task<ApiResponse> DeleteIncome( IncomeLittleDto incomeDto )
+        public async Task<ApiResponse> DeleteCashFlowAsync( CashFlowLittleDto cashFlowDto )
         {
-            var income = await GetIncomeAsync ( incomeDto.Source, incomeDto.AccountId );
+            var income = await GetCashFlowAsync ( cashFlowDto.Source, cashFlowDto.AccountId );
             if( income != null )
             {
-                _unitOfWork.Repository<IncomeEntity>().Delete ( income );
+                _unitOfWork.Repository<CashFlowEntity>().Delete ( income );
                 await _unitOfWork.CompleteAsync();
             }
 
@@ -77,85 +77,85 @@ namespace Fleet.Infrastructure.Services
 
         // TODO: Dodać osobny update dla nazwy płatności
         // TODO: Dodać osobny update dla terminu kolejnej płatności
-        public async Task<ApiResponse<IncomeDto>> UpdateIncomeAsync( IncomeDto incomeDto )
+        public async Task<ApiResponse<CashFlowDto>> UpdateCashFlowAsync( CashFlowDto cashFlowDto )
         {
-            var validateResult = await Validate ( incomeDto, EOperationEntity.Update );
+            var validateResult = await Validate ( cashFlowDto, EOperationEntity.Update );
             if( !string.IsNullOrEmpty ( validateResult ) )
-                return new ApiResponse<IncomeDto> ( 400, validateResult, null );
+                return new ApiResponse<CashFlowDto> ( 400, validateResult, null );
 
-            var entity = await GetIncomeAsync ( incomeDto.Source, incomeDto.AccountId );
-            entity.Income = incomeDto.Income;
-            entity.Source = incomeDto.Source;
-            entity.NextIncome = entity.PeriodicityDay < incomeDto.PeriodicityDay ? 
-                entity.NextIncome.AddDays ( -(entity.PeriodicityDay - incomeDto.PeriodicityDay) ) : 
-                entity.NextIncome.AddDays ( incomeDto.PeriodicityDay - entity.PeriodicityDay );
-            entity.PeriodicityDay = incomeDto.PeriodicityDay;
+            var entity = await GetCashFlowAsync ( cashFlowDto.Source, cashFlowDto.AccountId );
+            entity.Charge = cashFlowDto.Charge;
+            entity.Source = cashFlowDto.Source;
+            entity.NextCashFlow = entity.PeriodicityDay < cashFlowDto.PeriodicityDay ? 
+                entity.NextCashFlow.AddDays ( -(entity.PeriodicityDay - cashFlowDto.PeriodicityDay) ) : 
+                entity.NextCashFlow.AddDays ( cashFlowDto.PeriodicityDay - entity.PeriodicityDay );
+            entity.PeriodicityDay = cashFlowDto.PeriodicityDay;
             
-            if( entity.NextIncome.Date <= DateTime.Today )
-                return new ApiResponse<IncomeDto> ( 200, "Aktualizacja cykliczności przychodu na podaną ilość dni zaktualizuje dzień przychodu na wcześniejszy od bieżącego. Poczekaj na wpływ środków.", null );
+            if( entity.NextCashFlow.Date <= DateTime.Today )
+                return new ApiResponse<CashFlowDto> ( 200, "Aktualizacja cykliczności przychodu na podaną ilość dni zaktualizuje dzień przychodu na wcześniejszy od bieżącego. Poczekaj na wpływ środków.", null );
             
-            _unitOfWork.Repository<IncomeEntity>().Update ( entity );
+            _unitOfWork.Repository<CashFlowEntity>().Update ( entity );
             await _unitOfWork.CompleteAsync();
 
-            var updatedEntity = _map.Map<IncomeDto> ( entity );
+            var updatedEntity = _map.Map<CashFlowDto> ( entity );
 
 
-            return new ApiResponse<IncomeDto> ( 200, "", updatedEntity );
+            return new ApiResponse<CashFlowDto> ( 200, "", updatedEntity );
         }
 
-        public async Task<IncomeEntity> GetIncomeAsync( string source, int accountId )
+        public async Task<CashFlowEntity> GetCashFlowAsync( string source, int accountId )
         {
-            var spec = new UserProfileSpecification ( source, accountId );
-            var income = await _unitOfWork.Repository<IncomeEntity>().GetEntityWithSpecAsync ( spec );
-            return income;
+            var spec = new CashFlowSpecification ( source, accountId );
+            var cashFlow = await _unitOfWork.Repository<CashFlowEntity>().GetEntityWithSpecAsync ( spec );
+            return cashFlow;
         }
 
-        private async Task<bool> IsIncomeExistAsync( string source, int accountId )
+        private async Task<bool> IsCashFlowExistAsync( string source, int accountId )
         {
-            var spec = new UserProfileSpecification ( source, accountId );
-            var entity = await _unitOfWork.Repository<IncomeEntity>().GetEntityWithSpecAsync ( spec );
+            var spec = new CashFlowSpecification ( source, accountId );
+            var entity = await _unitOfWork.Repository<CashFlowEntity>().GetEntityWithSpecAsync ( spec );
 
             return entity != null;
         }
 
-        public async Task<IReadOnlyList<IncomeDto>> GetIncomesAsync( int accountId )
+        public async Task<IReadOnlyList<CashFlowDto>> GetCashFlowsAsync( int accountId )
         {
-            var spec = new UserProfileSpecification ( accountId );
-            var incomes = await _unitOfWork.Repository<IncomeEntity>().ListAsync ( spec );
-            var incomesDto = _map.Map<IReadOnlyList<IncomeDto>> ( incomes );
-            return incomesDto;
+            var spec = new CashFlowSpecification ( accountId );
+            var cashFlow = await _unitOfWork.Repository<CashFlowEntity>().ListAsync ( spec );
+            var cashFlowDto = _map.Map<IReadOnlyList<CashFlowDto>> ( cashFlow );
+            return cashFlowDto;
         }
 
         /// <summary>
         /// Waliduje wymagalność pól dla danej operacji
         /// </summary>
-        /// <param name="incomeDto">Obiekt do sprawdzenia</param>
+        /// <param name="cashFlowDto">Obiekt do sprawdzenia</param>
         /// <param name="operation">Typ operacji</param>
         /// <returns>Pusty string jeśli wszystko OK lub informacja co poszło nie tak</returns>
-        private async Task<string> Validate( IncomeDto incomeDto, EOperationEntity operation )
+        private async Task<string> Validate( CashFlowDto cashFlowDto, EOperationEntity operation )
         {
             switch ( operation )
             {
                 case EOperationEntity.Add:
-                    if( incomeDto.Income <= 0 )
-                        return "Przychód nie może być ujemny";
-                    if( await GetIncomeAsync ( incomeDto.Source, incomeDto.AccountId ) != null )
-                        return $"Przychód o nazwie '{incomeDto.Source}' już istnieje.";
-                    if( incomeDto.PeriodicityDay <= 0 || incomeDto.PeriodicityDay > new GregorianCalendar().GetDaysInYear(DateTime.Now.Year) )
+                    if( cashFlowDto.Charge <= 0 )
+                        return "Przepływ nie może być ujemny";
+                    if( await GetCashFlowAsync ( cashFlowDto.Source, cashFlowDto.AccountId ) != null )
+                        return $"Przepływ o nazwie '{cashFlowDto.Source}' już istnieje.";
+                    if( cashFlowDto.PeriodicityDay <= 0 || cashFlowDto.PeriodicityDay > new GregorianCalendar().GetDaysInYear(DateTime.Now.Year) )
                         return "Cykliczność musi się mieścić w przedziale między 1 dzień a ilością dni w roku";
-                    if( incomeDto.NextIncome.Date <= DateTime.Today )
-                        return "Kolejny przychód może być ustawiony od co najmniej kolejnego dnia";
+                    if( cashFlowDto.NextCashFlow.Date <= DateTime.Today )
+                        return "Kolejny przepływ może być ustawiony od co najmniej kolejnego dnia";
                     break;
                 
                 case EOperationEntity.Update:
-                    if( incomeDto.Income <= 0 )
-                        return "Przychód nie może być ujemny";
-                    if( incomeDto.PeriodicityDay <= 0 || incomeDto.PeriodicityDay > new GregorianCalendar().GetDaysInYear(DateTime.Now.Year) )
+                    if( cashFlowDto.Charge <= 0 )
+                        return "Przepływ nie może być ujemny";
+                    if( cashFlowDto.PeriodicityDay <= 0 || cashFlowDto.PeriodicityDay > new GregorianCalendar().GetDaysInYear(DateTime.Now.Year) )
                         return "Cykliczność musi się mieścić w przedziale między 1 dzień a ilością dni w roku";
-                    if( !await IsIncomeExistAsync ( incomeDto.Source, incomeDto.AccountId ) )
-                        return $"Brak przychodu o nazwie {incomeDto.Source}";
-                    if( incomeDto.NextIncome.Date <= DateTime.Today )
-                        return "Kolejny przychód może być ustawiony od co najmniej kolejnego dnia";
+                    if( !await IsCashFlowExistAsync ( cashFlowDto.Source, cashFlowDto.AccountId ) )
+                        return $"Brak Pprzepływu o nazwie {cashFlowDto.Source}";
+                    if( cashFlowDto.NextCashFlow.Date <= DateTime.Today )
+                        return "Kolejny przepływ może być ustawiony od co najmniej kolejnego dnia";
                     break;
             }
 

@@ -22,40 +22,40 @@ namespace Fleet.API.Controllers
             _map = map;
         }
 
-        [HttpPost ( "add-income" )]
-        public async Task<ApiResponse<IncomeDto>> AddIncomeAsync( [FromBody] IncomeDto incomeDto )
+        [HttpPost ( "add-cashflow" )]
+        public async Task<ApiResponse<CashFlowDto>> AddIncomeAsync( [FromBody] CashFlowDto cashFlowDto )
         {
-            return await _userProfileService.CreateIncomeAsync ( incomeDto );
+            return await _userProfileService.CreateCashFlowAsync ( cashFlowDto );
         }
         
-        [HttpPost ( "update-income" )]
-        public async Task<ApiResponse<IncomeDto>> UpdateIncome( [FromBody] IncomeDto incomeDto )
+        [HttpPost ( "update-cashflow" )]
+        public async Task<ApiResponse<CashFlowDto>> UpdateIncome( [FromBody] CashFlowDto cashFlowDto )
         {
-            return await _userProfileService.UpdateIncomeAsync ( incomeDto );
+            return await _userProfileService.UpdateCashFlowAsync ( cashFlowDto );
         }
         
-        [HttpGet ( "get-income" )]
-        public async Task<ApiResponse<IncomeDto>> GetIncome( [FromBody] IncomeLittleDto incomeDto )
+        [HttpGet ( "get-cashflow" )]
+        public async Task<ApiResponse<CashFlowDto>> GetIncome( [FromBody] CashFlowLittleDto cashFlowDto )
         {
-            var income = await _userProfileService.GetIncomeAsync ( incomeDto.Source, incomeDto.AccountId );
-            var incomeToReturn = _map.Map<IncomeDto> ( income );
+            var income = await _userProfileService.GetCashFlowAsync ( cashFlowDto.Source, cashFlowDto.AccountId );
+            var incomeToReturn = _map.Map<CashFlowDto> ( income );
             return incomeToReturn == null
-                    ? new ApiResponse<IncomeDto> ( 400, "Nie znaleziono przychodu", null )
-                    : new ApiResponse<IncomeDto> ( 200, "", incomeToReturn )
+                    ? new ApiResponse<CashFlowDto> ( 400, "Nie znaleziono przychodu", null )
+                    : new ApiResponse<CashFlowDto> ( 200, "", incomeToReturn )
                 ;
         }
         
-        [HttpGet ( "get-incomes" )]
-        public async Task<ApiResponse<List<IncomeDto>>> GetIncomes( [FromHeader] int accountId )
+        [HttpGet ( "get-cashflows" )]
+        public async Task<ApiResponse<List<CashFlowDto>>> GetIncomes( [FromHeader] int accountId )
         {
-            var incomes= await _userProfileService.GetIncomesAsync ( accountId );
-            return new ApiResponse<List<IncomeDto>> ( 200, "", incomes );
+            var incomes= await _userProfileService.GetCashFlowsAsync ( accountId );
+            return new ApiResponse<List<CashFlowDto>> ( 200, "", incomes );
         }
         
-        [HttpDelete ( "delete-income" )]
-        public async Task<ApiResponse> GetIncomes( [FromBody] IncomeLittleDto incomeDto )
+        [HttpDelete ( "delete-cashflow" )]
+        public async Task<ApiResponse> GetIncomes( [FromBody] CashFlowLittleDto cashFlowDto )
         {
-            var income = await _userProfileService.DeleteIncome ( incomeDto );
+            var income = await _userProfileService.DeleteCashFlowAsync ( cashFlowDto );
             return income;
         }
     }
