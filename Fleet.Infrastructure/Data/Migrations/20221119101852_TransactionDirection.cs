@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Fleet.Infrastructure.Data.Migrations
 {
-    public partial class CashFlows : Migration
+    public partial class TransactionDirection : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,6 +15,28 @@ namespace Fleet.Infrastructure.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "przychody_użytkownika");
+
+            migrationBuilder.AddColumn<int>(
+                name: "TransactionDirectionId",
+                table: "transakcja",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.CreateTable(
+                name: "kierunek_transakcji",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    kierunek = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_kierunek_transakcji", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "przepływy_pieniężne",
@@ -44,15 +66,43 @@ namespace Fleet.Infrastructure.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_transakcja_TransactionDirectionId",
+                table: "transakcja",
+                column: "TransactionDirectionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_przepływy_pieniężne_AccountId",
                 table: "przepływy_pieniężne",
                 column: "AccountId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_transakcja_kierunek_transakcji_TransactionDirectionId",
+                table: "transakcja",
+                column: "TransactionDirectionId",
+                principalTable: "kierunek_transakcji",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_transakcja_kierunek_transakcji_TransactionDirectionId",
+                table: "transakcja");
+
+            migrationBuilder.DropTable(
+                name: "kierunek_transakcji");
+
             migrationBuilder.DropTable(
                 name: "przepływy_pieniężne");
+
+            migrationBuilder.DropIndex(
+                name: "IX_transakcja_TransactionDirectionId",
+                table: "transakcja");
+
+            migrationBuilder.DropColumn(
+                name: "TransactionDirectionId",
+                table: "transakcja");
 
             migrationBuilder.CreateTable(
                 name: "opłaty_użytkownika",

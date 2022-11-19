@@ -4,7 +4,7 @@
         "email": "odomhorn@artiq.com"
     },
     "userProfile": {
-        "accountBalance": 0,
+        "accountBalance": 10000,
         "accountId": 1
     },
     "cashFlows": [
@@ -141,35 +141,50 @@
             "transactionDate": "2022-10-02",
             "currency": "PLN",
             "paid": 20,
-            "productId": 3
+            "productId": 3,
+            "transactionDirectionId": 1
         },
         {
             "quantity": 2,
             "transactionDate": "2022-10-02",
             "currency": "PLN",
             "paid": 12,
-            "productId": 7
+            "productId": 7,
+            "transactionDirectionId": 1
         },
         {
             "quantity": 1,
             "transactionDate": "2022-10-01",
             "currency": "PLN",
             "paid": 235,
-            "productId": 9
+            "productId": 9,
+            "transactionDirectionId": 1
         },
         {
             "quantity": 10,
             "transactionDate": "2022-10-01",
             "currency": "PLN",
             "paid": 50,
-            "productId": 1
+            "productId": 1,
+            "transactionDirectionId": 2
         },
         {
             "quantity": 2,
             "transactionDate": "2022-10-01",
             "currency": "PLN",
             "paid": 30,
-            "productId": 2
+            "productId": 2,
+            "transactionDirectionId": 1
+        }
+    ],
+    "transactionDirection": [
+        {
+            "TransactionDirection": "Wydatek"
+        },
+        {
+            "TransactionDirection": "Zarobek"
         }
     ]
+        
+    
 }

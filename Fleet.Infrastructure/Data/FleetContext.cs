@@ -11,6 +11,7 @@ namespace Fleet.Infrastructure.Data
         public DbSet<TransactionEntity> Transactions { get; set; }
         public DbSet<UserProfileEntity> UserProfile { get; set; }
         public DbSet<CashFlowEntity> CashFlows { get; set; }
+        public DbSet<TransactionDirectionEntity> TransactionsDirection { get; set; }
 
         public FleetContext(DbContextOptions<FleetContext> options) : base(options)
         {

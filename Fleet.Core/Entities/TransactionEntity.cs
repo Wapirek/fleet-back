@@ -35,6 +35,9 @@ namespace Fleet.Core.Entities
         public int? ProductId { get; set; }
 
         public ProductEntity Product { get; set; }
+
+        public TransactionDirectionEntity TransactionDirection { get; set; }
+        public int TransactionDirectionId { get; set; }
         
         #endregion
     }

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fleet.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(FleetContext))]
-    [Migration("20221116180001_CashFlows")]
-    partial class CashFlows
+    [Migration("20221119101852_TransactionDirection")]
+    partial class TransactionDirection
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -160,6 +160,22 @@ namespace Fleet.Infrastructure.Data.Migrations
                     b.ToTable("produkty");
                 });
 
+            modelBuilder.Entity("Fleet.Core.Entities.TransactionDirectionEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransactionDirection")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("kierunek");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("kierunek_transakcji");
+                });
+
             modelBuilder.Entity("Fleet.Core.Entities.TransactionEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -189,11 +205,16 @@ namespace Fleet.Infrastructure.Data.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("data_transakcji");
 
+                    b.Property<int>("TransactionDirectionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("TransactionDirectionId");
 
                     b.ToTable("transakcja");
                 });
@@ -269,9 +290,17 @@ namespace Fleet.Infrastructure.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ProductId");
 
+                    b.HasOne("Fleet.Core.Entities.TransactionDirectionEntity", "TransactionDirection")
+                        .WithMany()
+                        .HasForeignKey("TransactionDirectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Account");
 
                     b.Navigation("Product");
+
+                    b.Navigation("TransactionDirection");
                 });
 
             modelBuilder.Entity("Fleet.Core.Entities.UserProfileEntity", b =>

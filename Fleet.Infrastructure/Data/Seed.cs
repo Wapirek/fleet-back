@@ -90,6 +90,13 @@ namespace Fleet.Infrastructure.Data
             
             #endregion
             
+            #region Transaction Directions
+
+            foreach ( var transactionDirection in model.TransactionDirection )
+                _context.TransactionsDirection.Add ( transactionDirection );
+            
+            #endregion
+            
             _context.SaveChanges();
         }
         
