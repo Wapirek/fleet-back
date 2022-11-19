@@ -17,6 +17,8 @@ namespace Fleet.Core.Interfaces.Services
         /// </summary>
         Task UpdateAccountBalanceAsync();
 
+        Task UpdateAccountBalanceAsync( int accountId, double paid, int transactionDirectionId );
+
         Task<CashFlowEntity> GetCashFlowAsync( string source, int accountId );
 
         Task<IReadOnlyList<CashFlowDto>> GetCashFlowsAsync( int accountId );

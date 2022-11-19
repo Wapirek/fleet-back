@@ -18,6 +18,8 @@ namespace Fleet.API.Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ICatalogService, CatalogService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IProductService, ProductService>();
 
             services.AddScheduler();
             services.AddTransient<UserProfileProcess>();

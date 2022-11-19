@@ -7,6 +7,7 @@ using Fleet.Core.ApiModels;
 using Fleet.Core.Dtos;
 using Fleet.Core.Entities;
 using Fleet.Core.Enums;
+using Fleet.Core.Extensions;
 using Fleet.Core.Interfaces.Repositories;
 using Fleet.Core.Interfaces.Services;
 using Fleet.Core.Specifications;
@@ -48,6 +49,22 @@ namespace Fleet.Infrastructure.Services
             
             await _unitOfWork.Repository<UserProfileEntity>().ExecuteNonQuery ( updateIncomeQuery );
             await _unitOfWork.Repository<UserProfileEntity>().ExecuteNonQuery ( updateOutcomeQuery );
+        }
+
+        public async Task UpdateAccountBalanceAsync( int accountId, double paid, int transactionDirectionId )
+        {
+            var userProfile = await _unitOfWork.Repository<UserProfileEntity>().GetByIdAsync ( accountId );
+            var transactionDirection = await _unitOfWork.Repository<TransactionDirectionEntity>().GetByIdAsync ( transactionDirectionId );
+            if( userProfile != null )
+            {
+                if( transactionDirection.TransactionDirection == ETransactionDirection.Cost.GetnEnumMemberValue() )
+                    userProfile.AccountBalance -= paid;
+                if( transactionDirection.TransactionDirection == ETransactionDirection.Earn.GetnEnumMemberValue() )
+                    userProfile.AccountBalance += paid;
+
+                _unitOfWork.Repository<UserProfileEntity>().Update ( userProfile );
+                await _unitOfWork.CompleteAsync();
+            }
         }
 
         public async Task<ApiResponse<CashFlowDto>> CreateCashFlowAsync( CashFlowDto cashFlowDto )
