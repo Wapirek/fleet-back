@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fleet.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(FleetContext))]
-    [Migration("20221119101852_TransactionDirection")]
-    partial class TransactionDirection
+    [Migration("20221124203001_TransactionPositions")]
+    partial class TransactionPositions
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -140,16 +140,16 @@ namespace Fleet.Infrastructure.Data.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("nazwa_produktu");
 
-                    b.Property<string>("Seller")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("sprzedawca");
+                    b.Property<int?>("TransactionPostionsEntityId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Unit")
                         .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("jednostka");
+
+                    b.Property<int>("productPlaceId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -157,7 +157,33 @@ namespace Fleet.Infrastructure.Data.Migrations
 
                     b.HasIndex("CatalogId");
 
+                    b.HasIndex("TransactionPostionsEntityId");
+
+                    b.HasIndex("productPlaceId");
+
                     b.ToTable("produkty");
+                });
+
+            modelBuilder.Entity("Fleet.Core.Entities.ProductPlace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Place")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("place");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("product_place");
                 });
 
             modelBuilder.Entity("Fleet.Core.Entities.TransactionDirectionEntity", b =>
@@ -190,6 +216,37 @@ namespace Fleet.Infrastructure.Data.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("waluta");
 
+                    b.Property<double>("TotalPaid")
+                        .HasColumnType("double")
+                        .HasColumnName("zapłacono_łącznie");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("data_transakcji");
+
+                    b.Property<int>("TransactionDirectionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransactionName")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("nazwa_transakcji");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("TransactionDirectionId");
+
+                    b.ToTable("transakcja");
+                });
+
+            modelBuilder.Entity("Fleet.Core.Entities.TransactionPostionsEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
                     b.Property<double>("Paid")
                         .HasColumnType("double")
                         .HasColumnName("zapłacono");
@@ -201,22 +258,14 @@ namespace Fleet.Infrastructure.Data.Migrations
                         .HasColumnType("double")
                         .HasColumnName("ilość");
 
-                    b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("data_transakcji");
-
-                    b.Property<int>("TransactionDirectionId")
+                    b.Property<int>("TransactionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("TransactionId");
 
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("TransactionDirectionId");
-
-                    b.ToTable("transakcja");
+                    b.ToTable("transakcja_pozycje");
                 });
 
             modelBuilder.Entity("Fleet.Core.Entities.UserProfileEntity", b =>
@@ -273,9 +322,32 @@ namespace Fleet.Infrastructure.Data.Migrations
                         .WithMany("Produts")
                         .HasForeignKey("CatalogId");
 
+                    b.HasOne("Fleet.Core.Entities.TransactionPostionsEntity", null)
+                        .WithMany("Product")
+                        .HasForeignKey("TransactionPostionsEntityId");
+
+                    b.HasOne("Fleet.Core.Entities.ProductPlace", "ProductPlace")
+                        .WithMany()
+                        .HasForeignKey("productPlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Account");
 
                     b.Navigation("Catalog");
+
+                    b.Navigation("ProductPlace");
+                });
+
+            modelBuilder.Entity("Fleet.Core.Entities.ProductPlace", b =>
+                {
+                    b.HasOne("Fleet.Core.Entities.AccountEntity", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("Fleet.Core.Entities.TransactionEntity", b =>
@@ -286,10 +358,6 @@ namespace Fleet.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Fleet.Core.Entities.ProductEntity", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
                     b.HasOne("Fleet.Core.Entities.TransactionDirectionEntity", "TransactionDirection")
                         .WithMany()
                         .HasForeignKey("TransactionDirectionId")
@@ -298,9 +366,18 @@ namespace Fleet.Infrastructure.Data.Migrations
 
                     b.Navigation("Account");
 
-                    b.Navigation("Product");
-
                     b.Navigation("TransactionDirection");
+                });
+
+            modelBuilder.Entity("Fleet.Core.Entities.TransactionPostionsEntity", b =>
+                {
+                    b.HasOne("Fleet.Core.Entities.TransactionEntity", "Transaction")
+                        .WithMany("TransactionPostions")
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("Fleet.Core.Entities.UserProfileEntity", b =>
@@ -317,6 +394,16 @@ namespace Fleet.Infrastructure.Data.Migrations
             modelBuilder.Entity("Fleet.Core.Entities.CatalogEntity", b =>
                 {
                     b.Navigation("Produts");
+                });
+
+            modelBuilder.Entity("Fleet.Core.Entities.TransactionEntity", b =>
+                {
+                    b.Navigation("TransactionPostions");
+                });
+
+            modelBuilder.Entity("Fleet.Core.Entities.TransactionPostionsEntity", b =>
+                {
+                    b.Navigation("Product");
                 });
 #pragma warning restore 612, 618
         }

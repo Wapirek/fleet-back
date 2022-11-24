@@ -21,20 +21,18 @@ namespace Fleet.Infrastructure.Services
             var transactionToCreate = new TransactionEntity();
             
             if( transactionDto.ProductId == null )
-                transactionToCreate.Paid = transactionDto.Paid;
+                transactionToCreate.TotalPaid = transactionDto.Paid;
             else
             {
                 var product = await _unitOfWork.Repository<ProductEntity>().GetByIdAsync ( (int) transactionDto.ProductId );
-                transactionToCreate.Paid = product.Price * transactionDto.Quantity;
-                transactionDto.Paid = transactionToCreate.Paid;
+                transactionToCreate.TotalPaid = product.Price * transactionDto.Quantity;
+                transactionDto.Paid = transactionToCreate.TotalPaid;
             }
 
             transactionToCreate.TransactionDirectionId = transactionDto.TransactionDirectionId;
             transactionToCreate.AccountId = transactionDto.AccountId;
             transactionToCreate.Currency = transactionDto.Currency;
-            transactionToCreate.Quantity = transactionDto.Quantity;
             transactionToCreate.TransactionDate = transactionDto.TransactionDate;
-            transactionToCreate.ProductId = transactionDto.ProductId;
             
             _unitOfWork.Repository<TransactionEntity>().Add ( transactionToCreate );
             await _unitOfWork.CompleteAsync();

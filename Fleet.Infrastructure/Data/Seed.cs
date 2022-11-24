@@ -70,6 +70,16 @@ namespace Fleet.Infrastructure.Data
             
             #endregion
             
+            #region Product Places
+
+            foreach ( var productPlace in model.ProductPlaces )
+            {
+                productPlace.Account = model.Account;
+                _context.ProductPlaces.Add ( productPlace );
+            }
+            
+            #endregion
+            
             #region Products
 
             foreach ( var product in model.Products )
@@ -89,7 +99,7 @@ namespace Fleet.Infrastructure.Data
             }
             
             #endregion
-            
+
             #region Transaction Directions
 
             foreach ( var transactionDirection in model.TransactionDirection )

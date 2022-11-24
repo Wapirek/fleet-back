@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Fleet.Core.Entities
 {
@@ -10,19 +10,18 @@ namespace Fleet.Core.Entities
     {
         #region Columns
 
-        [Column("ilość")]
-        [Required]
-        public double Quantity { get; set; }
-
         [Column("data_transakcji")]
         [Required]
         public DateTime TransactionDate { get; set; }
-
+        
         [Column("waluta")]
         public string Currency { get; set; }
-
-        [Column("zapłacono")]
-        public double Paid { get; set; }
+        
+        [Column("zapłacono_łącznie")]
+        public double TotalPaid { get; set; }
+        
+        [Column("nazwa_transakcji")]
+        public string TransactionName { get; set; }
         
         #endregion
         
@@ -30,15 +29,12 @@ namespace Fleet.Core.Entities
 
         public int AccountId { get; set; }
         public AccountEntity Account { get; set; }
-
-        [AllowNull]
-        public int? ProductId { get; set; }
-
-        public ProductEntity Product { get; set; }
-
-        public TransactionDirectionEntity TransactionDirection { get; set; }
-        public int TransactionDirectionId { get; set; }
         
+        public int TransactionDirectionId { get; set; }
+        public TransactionDirectionEntity TransactionDirection { get; set; }
+        
+        public List<TransactionPostionsEntity> TransactionPostions { get; set; }
+
         #endregion
     }
 }

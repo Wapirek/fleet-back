@@ -1,7 +1,7 @@
 {
     "account": {
-        "username": "Odom",
-        "email": "odomhorn@artiq.com"
+        "username": "login2",
+        "email": "login2@login2.com"
     },
     "userProfile": {
         "accountBalance": 10000,
@@ -66,70 +66,70 @@
     "products": [
         {
             "productName": "Jogurt",
-            "seller": "Biedronka",
+            "productPlaceId": 1,
             "price": 5,
             "unit": "szt",
             "catalogId": 1
         },
         {
             "productName": "Chleb",
-            "seller": "Biedronka",
+            "productPlaceId": 1,
             "price": 15,
             "unit": "szt",
             "catalogId": 1
         },
         {
             "productName": "Piwo",
-            "seller": "Żabka",
+            "productPlaceId": 1,
             "price": 5,
             "unit": "szt",
             "catalogId": 3
         },
         {
             "productName": "Domestos",
-            "seller": "Biedronka",
+            "productPlaceId": 1,
             "price": 25,
             "unit": "szt",
             "catalogId": 5
         },
         {
             "productName": "Chusteczki",
-            "seller": "Biedronka",
+            "productPlaceId": 2,
             "price": 1,
             "unit": "szt",
             "catalogId": 5
         },
         {
             "productName": "Lemoniada",
-            "seller": "Biedronka",
+            "productPlaceId": 2,
             "price": 8,
             "unit": "szt",
             "catalogId": 2
         },
         {
             "productName": "Pryncypałki",
-            "seller": "Biedronka",
+            "productPlaceId": 2,
             "price": 6,
             "unit": "szt",
             "catalogId": 4
         },
         {
             "productName": "Kabel HDMI",
-            "seller": "Ikea",
+            "productPlaceId": 1,
             "price": 65,
             "unit": "szt",
             "catalogId": 6
         },
         {
             "productName": "Słuchawki douszne",
-            "seller": "Media Expert",
+            "productPlaceId": 2,
             "price": 235,
             "unit": "szt",
             "catalogId": 6
         },
         {
             "productName": "Lampa nocna",
-            "seller": "Media Expert",
+            "productPlaceId": 1,
             "price": 175,
             "unit": "szt",
             "catalogId": 6
@@ -137,44 +137,72 @@
     ],
     "transactions": [
         {
-            "quantity": 4,
+            "accountId": 1,
             "transactionDate": "2022-10-02",
+            "transactionName": "Zakupy spożywcze_2022-10-02_1",
             "currency": "PLN",
-            "paid": 20,
-            "productId": 3,
-            "transactionDirectionId": 1
+            "totalPaid": 20,
+            "transactionDirectionId": 1,
+            "transactionPostions": [
+                {
+                    "paid": 3,
+                    "quantity": 3,
+                    "productId": 1,
+                    "transactionId": 1
+                },
+                {
+                    "paid": 4,
+                    "quantity": 2,
+                    "productId": 4,
+                    "transactionId": 1
+                },
+                {
+                    "paid": 2,
+                    "quantity": 1,
+                    "productId": 3,
+                    "transactionId": 1
+                },
+                {
+                    "paid": 7,
+                    "quantity": 2,
+                    "productId": 2,
+                    "transactionId": 1
+                }
+            ]
         },
         {
-            "quantity": 2,
+            "accountId": 1,
             "transactionDate": "2022-10-02",
+            "transactionName": "Skrypt_2022-10-02_1",
             "currency": "PLN",
-            "paid": 12,
-            "productId": 7,
-            "transactionDirectionId": 1
-        },
-        {
-            "quantity": 1,
-            "transactionDate": "2022-10-01",
-            "currency": "PLN",
-            "paid": 235,
-            "productId": 9,
-            "transactionDirectionId": 1
-        },
-        {
-            "quantity": 10,
-            "transactionDate": "2022-10-01",
-            "currency": "PLN",
-            "paid": 50,
-            "productId": 1,
-            "transactionDirectionId": 2
-        },
-        {
-            "quantity": 2,
-            "transactionDate": "2022-10-01",
-            "currency": "PLN",
-            "paid": 30,
-            "productId": 2,
-            "transactionDirectionId": 1
+            "totalPaid": 12,
+            "transactionDirectionId": 2,
+            "transactionPostions": [
+                {
+                    "paid": 3,
+                    "quantity": 3,
+                    "productId": 6,
+                    "transactionId": 1
+                },
+                {
+                    "paid": 4,
+                    "quantity": 2,
+                    "productId": 4,
+                    "transactionId": 1
+                },
+                {
+                    "paid": 2,
+                    "quantity": 1,
+                    "productId": 3,
+                    "transactionId": 1
+                },
+                {
+                    "paid": 7,
+                    "quantity": 2,
+                    "productId": 2,
+                    "transactionId": 1
+                }
+            ]
         }
     ],
     "transactionDirection": [
@@ -183,6 +211,16 @@
         },
         {
             "TransactionDirection": "Zarobek"
+        }
+    ],
+    "productPlaces": [
+        {
+            "accountId": 1,
+            "place": "Biedronka"
+        },
+        {
+            "accountId": 1,
+            "place": "Żabka"
         }
     ]
         

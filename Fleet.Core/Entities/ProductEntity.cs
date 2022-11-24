@@ -12,11 +12,7 @@ namespace Fleet.Core.Entities
         [Column("nazwa_produktu")]
         [Required] [StringLength(100)]
         public string ProductName { get; set; }
-        
-        [Column("sprzedawca")]
-        [Required][StringLength(100)]
-        public string Seller { get; set; }
-        
+
         [Column("cena")]
         [Required]
         public double Price { get; set; }
@@ -36,6 +32,9 @@ namespace Fleet.Core.Entities
         
         public int AccountId { get; set; }
         public AccountEntity Account { get; set; }
+
+        public int productPlaceId { get; set; }
+        public ProductPlace ProductPlace { get; set; }
 
         #endregion
     }
