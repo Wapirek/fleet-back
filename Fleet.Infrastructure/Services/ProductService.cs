@@ -2,6 +2,7 @@
 using Fleet.Core.Entities;
 using Fleet.Core.Interfaces.Repositories;
 using Fleet.Core.Interfaces.Services;
+using Fleet.Core.Specifications;
 
 namespace Fleet.Infrastructure.Services
 {
@@ -14,9 +15,18 @@ namespace Fleet.Infrastructure.Services
             _unitOfWork = unitOfWork;
         }
         
-        public async Task<ProductEntity> GetProduct( int id )
+        public async Task<ProductEntity> GetProduct( string product, string shop, int accountId )
         {
-            return await _unitOfWork.Repository<ProductEntity>().GetByIdAsync ( id );
+            var productSpec = new ProductSpecification ( product, shop, accountId );
+            var productEntity = await _unitOfWork.Repository<ProductEntity>().GetEntityWithSpecAsync ( productSpec );
+            return productEntity;
+        }
+
+        public async Task<ProductEntity> CreateProduct( ProductEntity product )
+        {
+            _unitOfWork.Repository<ProductEntity>().Add ( product );
+            await _unitOfWork.CompleteAsync();
+            return product;
         }
     }
 }

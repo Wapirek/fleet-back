@@ -5,6 +5,7 @@ namespace Fleet.Core.Interfaces.Services
 {
     public interface IProductService
     {
-        Task<ProductEntity> GetProduct( int id );
+        Task<ProductEntity> GetProduct( string product, string shop, int accountId );
+        Task<ProductEntity> CreateProduct( ProductEntity product );
     }
 }

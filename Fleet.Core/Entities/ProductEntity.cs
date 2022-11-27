@@ -34,7 +34,7 @@ namespace Fleet.Core.Entities
         public AccountEntity Account { get; set; }
 
         public int productPlaceId { get; set; }
-        public ProductPlace ProductPlace { get; set; }
+        public ProductPlaceEntity ProductPlace { get; set; }
 
         #endregion
     }

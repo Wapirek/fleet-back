@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Fleet.Core.Entities
 {
-    [Table("product_place")]
-    public class ProductPlace : BaseEntity
+    [Table("produkty_źródło")]
+    public class ProductPlaceEntity : BaseEntity
     {
         #region Columns
         

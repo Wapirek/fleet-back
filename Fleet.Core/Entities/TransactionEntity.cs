@@ -33,7 +33,7 @@ namespace Fleet.Core.Entities
         public int TransactionDirectionId { get; set; }
         public TransactionDirectionEntity TransactionDirection { get; set; }
         
-        public List<TransactionPostionsEntity> TransactionPostions { get; set; }
+        public List<TransactionPositionsEntity> TransactionPostions { get; set; }
 
         #endregion
     }

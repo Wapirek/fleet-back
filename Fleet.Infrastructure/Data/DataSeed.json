@@ -69,77 +69,87 @@
             "productPlaceId": 1,
             "price": 5,
             "unit": "szt",
-            "catalogId": 1
+            "catalogId": 1,
+            "accountId": 1
         },
         {
             "productName": "Chleb",
             "productPlaceId": 1,
             "price": 15,
             "unit": "szt",
-            "catalogId": 1
+            "catalogId": 1,
+            "accountId": 1
         },
         {
             "productName": "Piwo",
             "productPlaceId": 1,
             "price": 5,
             "unit": "szt",
-            "catalogId": 3
+            "catalogId": 3,
+            "accountId": 1
         },
         {
             "productName": "Domestos",
             "productPlaceId": 1,
             "price": 25,
             "unit": "szt",
-            "catalogId": 5
+            "catalogId": 5,
+            "accountId": 1
         },
         {
             "productName": "Chusteczki",
             "productPlaceId": 2,
             "price": 1,
             "unit": "szt",
-            "catalogId": 5
+            "catalogId": 5,
+            "accountId": 1
         },
         {
             "productName": "Lemoniada",
             "productPlaceId": 2,
             "price": 8,
             "unit": "szt",
-            "catalogId": 2
+            "catalogId": 2,
+            "accountId": 1
         },
         {
             "productName": "Pryncypałki",
             "productPlaceId": 2,
             "price": 6,
             "unit": "szt",
-            "catalogId": 4
+            "catalogId": 4,
+            "accountId": 1
         },
         {
             "productName": "Kabel HDMI",
             "productPlaceId": 1,
             "price": 65,
             "unit": "szt",
-            "catalogId": 6
+            "catalogId": 6,
+            "accountId": 1
         },
         {
             "productName": "Słuchawki douszne",
             "productPlaceId": 2,
             "price": 235,
             "unit": "szt",
-            "catalogId": 6
+            "catalogId": 6,
+            "accountId": 1
         },
         {
             "productName": "Lampa nocna",
             "productPlaceId": 1,
             "price": 175,
             "unit": "szt",
-            "catalogId": 6
+            "catalogId": 6,
+            "accountId": 1
         }
     ],
     "transactions": [
         {
             "accountId": 1,
             "transactionDate": "2022-10-02",
-            "transactionName": "Zakupy spożywcze_2022-10-02_1",
+            "transactionName": "Zakupy spożywcze_1",
             "currency": "PLN",
             "totalPaid": 20,
             "transactionDirectionId": 1,
@@ -173,7 +183,7 @@
         {
             "accountId": 1,
             "transactionDate": "2022-10-02",
-            "transactionName": "Skrypt_2022-10-02_1",
+            "transactionName": "Skrypt_1",
             "currency": "PLN",
             "totalPaid": 12,
             "transactionDirectionId": 2,

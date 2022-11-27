@@ -44,11 +44,11 @@ namespace Fleet.Infrastructure.Data
             #endregion
             
             #region User Profile
-
+            
             _context.UserProfile.Add ( model.UserProfile );
             
             #endregion
-
+            
             #region CashFlows
             
             foreach ( var cashFlow in model.CashFlows )
@@ -61,7 +61,7 @@ namespace Fleet.Infrastructure.Data
             #endregion
             
             #region Catalogs
-
+            
             foreach ( var catalog in model.Catalogs )
             {
                 catalog.Account = model.Account;
@@ -71,7 +71,7 @@ namespace Fleet.Infrastructure.Data
             #endregion
             
             #region Product Places
-
+            
             foreach ( var productPlace in model.ProductPlaces )
             {
                 productPlace.Account = model.Account;
@@ -81,17 +81,18 @@ namespace Fleet.Infrastructure.Data
             #endregion
             
             #region Products
-
+            
             foreach ( var product in model.Products )
             {
                 product.Account = model.Account;
+                product.ProductPlace = model.ProductPlaces[product.productPlaceId - 1];
                 _context.Products.Add ( product );
             }
             
             #endregion
             
             #region Transactions
-
+            
             foreach ( var transaction in model.Transactions )
             {
                 transaction.Account = model.Account;
@@ -99,9 +100,9 @@ namespace Fleet.Infrastructure.Data
             }
             
             #endregion
-
+            
             #region Transaction Directions
-
+            
             foreach ( var transactionDirection in model.TransactionDirection )
                 _context.TransactionsDirection.Add ( transactionDirection );
             

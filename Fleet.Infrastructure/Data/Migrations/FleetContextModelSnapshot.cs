@@ -138,9 +138,6 @@ namespace Fleet.Infrastructure.Data.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("nazwa_produktu");
 
-                    b.Property<int?>("TransactionPostionsEntityId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Unit")
                         .IsRequired()
                         .HasColumnType("longtext")
@@ -155,14 +152,12 @@ namespace Fleet.Infrastructure.Data.Migrations
 
                     b.HasIndex("CatalogId");
 
-                    b.HasIndex("TransactionPostionsEntityId");
-
                     b.HasIndex("productPlaceId");
 
                     b.ToTable("produkty");
                 });
 
-            modelBuilder.Entity("Fleet.Core.Entities.ProductPlace", b =>
+            modelBuilder.Entity("Fleet.Core.Entities.ProductPlaceEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -181,7 +176,7 @@ namespace Fleet.Infrastructure.Data.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("product_place");
+                    b.ToTable("produkty_źródło");
                 });
 
             modelBuilder.Entity("Fleet.Core.Entities.TransactionDirectionEntity", b =>
@@ -239,7 +234,7 @@ namespace Fleet.Infrastructure.Data.Migrations
                     b.ToTable("transakcja");
                 });
 
-            modelBuilder.Entity("Fleet.Core.Entities.TransactionPostionsEntity", b =>
+            modelBuilder.Entity("Fleet.Core.Entities.TransactionPositionsEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -260,6 +255,8 @@ namespace Fleet.Infrastructure.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("TransactionId");
 
@@ -320,11 +317,7 @@ namespace Fleet.Infrastructure.Data.Migrations
                         .WithMany("Produts")
                         .HasForeignKey("CatalogId");
 
-                    b.HasOne("Fleet.Core.Entities.TransactionPostionsEntity", null)
-                        .WithMany("Product")
-                        .HasForeignKey("TransactionPostionsEntityId");
-
-                    b.HasOne("Fleet.Core.Entities.ProductPlace", "ProductPlace")
+                    b.HasOne("Fleet.Core.Entities.ProductPlaceEntity", "ProductPlace")
                         .WithMany()
                         .HasForeignKey("productPlaceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -337,7 +330,7 @@ namespace Fleet.Infrastructure.Data.Migrations
                     b.Navigation("ProductPlace");
                 });
 
-            modelBuilder.Entity("Fleet.Core.Entities.ProductPlace", b =>
+            modelBuilder.Entity("Fleet.Core.Entities.ProductPlaceEntity", b =>
                 {
                     b.HasOne("Fleet.Core.Entities.AccountEntity", "Account")
                         .WithMany()
@@ -367,13 +360,19 @@ namespace Fleet.Infrastructure.Data.Migrations
                     b.Navigation("TransactionDirection");
                 });
 
-            modelBuilder.Entity("Fleet.Core.Entities.TransactionPostionsEntity", b =>
+            modelBuilder.Entity("Fleet.Core.Entities.TransactionPositionsEntity", b =>
                 {
+                    b.HasOne("Fleet.Core.Entities.ProductEntity", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
                     b.HasOne("Fleet.Core.Entities.TransactionEntity", "Transaction")
                         .WithMany("TransactionPostions")
                         .HasForeignKey("TransactionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Product");
 
                     b.Navigation("Transaction");
                 });
@@ -397,11 +396,6 @@ namespace Fleet.Infrastructure.Data.Migrations
             modelBuilder.Entity("Fleet.Core.Entities.TransactionEntity", b =>
                 {
                     b.Navigation("TransactionPostions");
-                });
-
-            modelBuilder.Entity("Fleet.Core.Entities.TransactionPostionsEntity", b =>
-                {
-                    b.Navigation("Product");
                 });
 #pragma warning restore 612, 618
         }
