@@ -25,8 +25,12 @@ namespace Fleet.API.Controllers
         {
             var result = await _transactionService.CreateTransaction ( transactionDto );
             var response = (TransactionDto) result.Response;
-            await _userProfileService.UpdateAccountBalanceAsync ( response.AccountId, response.TotalPaid,
-                response.TransactionDirectionId );
+            if( response != null )
+            {
+                await _userProfileService.UpdateAccountBalanceAsync ( response.AccountId, response.TotalPaid,
+                    response.TransactionDirectionId );
+            }
+
             return result;
         }
     }

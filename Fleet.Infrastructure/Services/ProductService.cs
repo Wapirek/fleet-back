@@ -21,6 +21,13 @@ namespace Fleet.Infrastructure.Services
             var productEntity = await _unitOfWork.Repository<ProductEntity>().GetEntityWithSpecAsync ( productSpec );
             return productEntity;
         }
+        
+        public async Task<ProductEntity> GetProduct( string product, int placeId, int accountId )
+        {
+            var productSpec = new ProductSpecification ( product, placeId, accountId );
+            var productEntity = await _unitOfWork.Repository<ProductEntity>().GetEntityWithSpecAsync ( productSpec );
+            return productEntity;
+        }
 
         public async Task<ProductEntity> CreateProduct( ProductEntity product )
         {

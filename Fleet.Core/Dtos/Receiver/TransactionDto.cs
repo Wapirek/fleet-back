@@ -10,7 +10,6 @@ namespace Fleet.Core.Dtos
         public double TotalPaid { get; set; }
         public string TransactionName { get; set; }
         public string Place { get; set; }
-        public string CatalogName { get; set; }
         public int AccountId { get; set; }
         public int TransactionDirectionId { get; set; }
         public List<TransactionPositionsDto> Positions { get; set; }

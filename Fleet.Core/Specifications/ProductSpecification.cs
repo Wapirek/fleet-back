@@ -21,6 +21,17 @@ namespace Fleet.Core.Specifications
         {
             AddInclude ( x => x.Catalog );
             AddInclude ( x => x.ProductPlace );
+            AddInclude ( x => x.Account );
+        }
+        
+        public ProductSpecification(string productName,  int placeId, int accountId)
+            : base (x => x.AccountId == accountId &&
+                         x.ProductName == productName && 
+                         x.productPlaceId == placeId)
+        {
+            AddInclude ( x => x.Catalog );
+            AddInclude ( x => x.ProductPlace );
+            AddInclude ( x => x.Account );
         }
     }
 }

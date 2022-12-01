@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Fleet.Core.ApiModels;
 using Fleet.Core.Dtos;
@@ -25,6 +24,13 @@ namespace Fleet.Infrastructure.Services
         public async Task<ApiResponse<TransactionDto>> CreateTransaction( TransactionDto transactionDto )
         {
             var transactionToCreate = new TransactionEntity();
+         
+            var placeSpec = new ProductPlaceSpecification ( transactionDto.Place );
+            var place = await _unitOfWork.Repository<ProductPlaceEntity>().GetEntityWithSpecAsync ( placeSpec );
+
+            if( place == null)
+                return new ApiResponse<TransactionDto> ( 200, "Utwórz najpierw miejse transakcji", null );
+            
             
             var amountTransactions = await AmountTransactionNames ( transactionDto.TransactionDate,
                 transactionDto.TransactionName,
@@ -37,12 +43,11 @@ namespace Fleet.Infrastructure.Services
             transactionToCreate.AccountId = transactionDto.AccountId;
 
             _unitOfWork.Repository<TransactionEntity>().Add ( transactionToCreate );
-
+            await _unitOfWork.CompleteAsync();
             
             foreach ( var position in transactionDto.Positions )
             {
-                var res = await CreateTransactionPosition ( position, transactionDto.Place, transactionDto.CatalogName,
-                    transactionDto.AccountId );
+                var res = await CreateTransactionPosition ( position, place.Id, transactionDto.AccountId );
                 if( string.IsNullOrEmpty ( res.Message ) )
                 {
                     var transactionPosition = (TransactionPositionsEntity) res.Response;
@@ -71,34 +76,31 @@ namespace Fleet.Infrastructure.Services
             return transaction.Count;
  ;       }
 
-        private async Task<ApiResponse<TransactionPositionsEntity>> CreateTransactionPosition( TransactionPositionsDto position, string shop, string catalog, int accountId )
+        private async Task<ApiResponse<TransactionPositionsEntity>> CreateTransactionPosition( TransactionPositionsDto position, int placeId, int accountId )
         {
             var positionToCreate = new TransactionPositionsEntity();
             positionToCreate.Paid = position.Paid;
             positionToCreate.Quantity = position.Quantity;
 
             var response = new ApiResponse<TransactionPositionsEntity> ( 200, "", null );
-            var productCountSpec = new ProductCountSpecification ( position.ProductName, catalog, shop, accountId );
-            var products = await _unitOfWork.Repository<ProductEntity>().ListAsync ( productCountSpec );
 
-
-            if( products.Count > 0 )
-                return new ApiResponse<TransactionPositionsEntity> ( 400, "Produkt istnieje już w innym katalogu", null );
-
-            // pobieram produkt po nazwie dla danego sklepu w danym katalogu
-            var product = await _productService.GetProduct ( position.ProductName, shop, accountId );
+            // pobieram produkt po nazwie dla danego sklepu
+            var product = await _productService.GetProduct ( position.ProductName, placeId, accountId );
             
             // jesli istnieje to z niego korzystam
             if( product != null )
-                positionToCreate.ProductId = products.FirstOrDefault()?.Id;
+            {
+                positionToCreate.ProductId = product.Id;
+                positionToCreate.Product = product;
+                
+            }
+            // jeśli nie to tworzę nowy
             else
             {
-                var catalogSpec = new CatalogSpecification ( catalog, accountId );
+                var catalogSpec = new CatalogSpecification ( position.CatalogName, accountId );
                 var catalogEntity = await _unitOfWork.Repository<CatalogEntity>().GetEntityWithSpecAsync ( catalogSpec );
 
-                var placeSpec = new ProductPlaceSpecification ( shop );
-                var place = await _unitOfWork.Repository<ProductPlaceEntity>().GetEntityWithSpecAsync ( placeSpec );
-                
+
                 // tworzenie produktu
                 var productEntity = new ProductEntity
                 {
@@ -107,7 +109,7 @@ namespace Fleet.Infrastructure.Services
                     Price = position.Paid / position.Quantity,
                     ProductName = position.ProductName,
                     Unit = position.Unit,
-                    productPlaceId = place.Id
+                    productPlaceId = placeId
                 };
                 await _productService.CreateProduct ( productEntity );
                 
