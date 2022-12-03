@@ -46,9 +46,9 @@ namespace Fleet.API.Controllers
         }
         
         [HttpGet ( "get-cashflows" )]
-        public async Task<ApiResponse<List<CashFlowDto>>> GetIncomes( [FromHeader] int accountId )
+        public async Task<ApiResponse<List<CashFlowDto>>> GetIncomes( int accId )
         {
-            var incomes= await _userProfileService.GetCashFlowsAsync ( accountId );
+            var incomes= await _userProfileService.GetCashFlowsAsync ( accId );
             return new ApiResponse<List<CashFlowDto>> ( 200, "", incomes );
         }
         
