@@ -11,6 +11,7 @@ using Fleet.Core.Extensions;
 using Fleet.Core.Interfaces.Repositories;
 using Fleet.Core.Interfaces.Services;
 using Fleet.Core.Specifications;
+using Fleet.Core.Specifications.Params;
 
 namespace Fleet.Infrastructure.Services
 {
@@ -135,9 +136,9 @@ namespace Fleet.Infrastructure.Services
             return entity != null;
         }
 
-        public async Task<IReadOnlyList<CashFlowDto>> GetCashFlowsAsync( int accountId )
+        public async Task<IReadOnlyList<CashFlowDto>> GetCashFlowsAsync( CashFlowSpecParams @params, int accountId )
         {
-            var spec = new CashFlowSpecification ( accountId );
+            var spec = new CashFlowSpecification ( @params, accountId );
             var cashFlow = await _unitOfWork.Repository<CashFlowEntity>().ListAsync ( spec );
             var cashFlowDto = _map.Map<IReadOnlyList<CashFlowDto>> ( cashFlow );
             return cashFlowDto;

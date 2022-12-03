@@ -1,4 +1,5 @@
 ﻿using Fleet.Core.Entities;
+using Fleet.Core.Specifications.Params;
 
 namespace Fleet.Core.Specifications
 {
@@ -15,6 +16,12 @@ namespace Fleet.Core.Specifications
             : base (x => x.AccountId == accountId)
         {
             AddInclude ( x => x.Account );
+        }
+
+        public CashFlowSpecification(CashFlowSpecParams @params, int accountId)
+        : base (x => x.AccountId == accountId)
+        {
+            ApplyPaging ( @params.PageSize * ( @params.PageIndex - 1 ), @params.PageSize );
         }
     }
 }
