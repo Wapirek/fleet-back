@@ -56,8 +56,12 @@ namespace Fleet.API.Controllers
         public async Task<ActionResult<LoginResultDto>> RegisterAsync([FromBody] RegisterDto registerDto)
         {
             var user = await _accService.GetUserByNameAsync ( registerDto.Login );
-            if( user != null ) return Unauthorized ( new ApiResponse ( 404, "Nazwa użytkownika jest zarezerwowana" ) );
+            if( user != null ) return BadRequest ( new ApiResponse ( 400, "Nazwa użytkownika jest zarezerwowana" ) );
 
+            var isEmailExist = await _accService.IsExistEmail ( registerDto.Email );
+            if( isEmailExist ) return BadRequest ( new ApiResponse ( 400, "Email jest już przypisany do konta" ) );
+            
+            
             var createdUser = await _accService.CreateUser ( registerDto );
 
             return Ok ( createdUser );

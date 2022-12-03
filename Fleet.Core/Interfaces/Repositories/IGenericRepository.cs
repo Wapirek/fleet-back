@@ -19,6 +19,15 @@ namespace Fleet.Core.Interfaces.Repositories
         Task<T> GetByIdAsync( int id );
 
         /// <summary>
+        /// Select * from T where columnName  = value
+        /// </summary>
+        /// <param name="columnName">Nazwa kolumny tabeli</param>
+        /// <param name="value">wartość</param>
+        /// <param name="entity">Tabela</param>
+        /// <returns>Wiersz tabeli o danej wartości z kolumn</returns>
+        Task<T> GetByColumn( string columnName, object value );
+
+        /// <summary>
         /// Select * from T where column = spec
         /// </summary>
         /// <param name="id">Klucz główny tabeli T</param>

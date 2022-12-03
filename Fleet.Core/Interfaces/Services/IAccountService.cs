@@ -9,6 +9,7 @@ namespace Fleet.Core.Interfaces.Services
     public interface IAccountService
     {
         Task<AccountEntity> GetUserByNameAsync( string login );
+        Task<bool> IsExistEmail( string email );
         bool CheckPasswordAsync( AccountEntity account, string password );
         Task<ApiResponse<LoginResultDto>> CreateUser( RegisterDto registerDto );
     }

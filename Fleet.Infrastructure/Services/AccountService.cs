@@ -39,11 +39,16 @@ namespace Fleet.Infrastructure.Services
 
         public async Task<AccountEntity> GetUserByNameAsync( string login )
         {
-            var accSpec = new AccountSpecification ( login );
-            var acc = await _unitOfWork.Repository<AccountEntity>().GetEntityWithSpecAsync ( accSpec );
-
+            var acc =  await _unitOfWork.Repository<AccountEntity>().GetByColumn ( "login", login );
             return acc;
         }
+
+        public async Task<bool> IsExistEmail( string email )
+        {
+            var acc =  await _unitOfWork.Repository<AccountEntity>().GetByColumn ( "email", email );
+            return acc != null;
+        }
+        
 
         public bool CheckPasswordAsync( AccountEntity account, string password )
         {

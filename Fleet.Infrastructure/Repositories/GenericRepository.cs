@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Fleet.Core.Entities;
+using Fleet.Core.Extensions;
 using Fleet.Core.Interfaces.Repositories;
 using Fleet.Core.Specifications;
 using Fleet.Infrastructure.Data;
@@ -35,6 +38,20 @@ namespace Fleet.Infrastructure.Repositories
         public async Task<T> GetByIdAsync( int id )
         {
             return (await _context.Set<T>().FindAsync ( id ))!;
+        }
+        
+        public async Task<T?> GetByColumn(string columnName, object value )
+        {
+            var tableAttribute = (TableAttribute) Attribute.GetCustomAttribute ( typeof(T), typeof(TableAttribute) )!;
+            if( tableAttribute != null )
+            {
+                var tableName = tableAttribute.Name;
+                var query = _context.Set<T>().FromSqlRaw ( $"Select * from {tableName} where {columnName} = '{value}'" );
+                var entity = query.FirstOrDefault();
+                return entity;
+            }
+
+            return null;
         }
 
         public async Task<IReadOnlyList<T>> ListAsync( ISpecification<T> spec )
