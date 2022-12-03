@@ -8,9 +8,11 @@ using Fleet.Core.Dtos;
 using Fleet.Core.Entities;
 using Fleet.Core.Enums;
 using Fleet.Core.Extensions;
+using Fleet.Core.Helpers;
 using Fleet.Core.Interfaces.Repositories;
 using Fleet.Core.Interfaces.Services;
 using Fleet.Core.Specifications;
+using Fleet.Core.Specifications.Counts;
 using Fleet.Core.Specifications.Params;
 
 namespace Fleet.Infrastructure.Services
@@ -136,12 +138,17 @@ namespace Fleet.Infrastructure.Services
             return entity != null;
         }
 
-        public async Task<IReadOnlyList<CashFlowDto>> GetCashFlowsAsync( CashFlowSpecParams @params, int accountId )
+        public async Task<Pagination<CashFlowDto>> GetCashFlowsAsync( CashFlowSpecParams @params, int accountId )
         {
             var spec = new CashFlowSpecification ( @params, accountId );
             var cashFlow = await _unitOfWork.Repository<CashFlowEntity>().ListAsync ( spec );
+
+            var countSpec = new CashFlowCountSpec ( accountId );
+            var cashFlowCount = await _unitOfWork.Repository<CashFlowEntity>().ListAsync ( countSpec );
+            
             var cashFlowDto = _map.Map<IReadOnlyList<CashFlowDto>> ( cashFlow );
-            return cashFlowDto;
+            var apiResponse = new ApiResponse<CashFlowDto> ( 200, "", cashFlowDto );
+            return new Pagination<CashFlowDto> ( @params.PageIndex, @params.PageSize, cashFlowCount.Count, apiResponse );
         }
 
         /// <summary>

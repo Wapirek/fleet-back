@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Fleet.Core.ApiModels;
 using Fleet.Core.Dtos;
+using Fleet.Core.Helpers;
 using Fleet.Core.Interfaces.Services;
 using Fleet.Core.Specifications.Params;
 using Microsoft.AspNetCore.Mvc;
@@ -47,10 +49,10 @@ namespace Fleet.API.Controllers
         }
         
         [HttpGet ( "get-cashflows" )]
-        public async Task<ApiResponse<List<CashFlowDto>>> GetIncomes( [FromQuery] CashFlowSpecParams @params, int accId )
+        public async Task<Pagination<CashFlowDto>> GetIncomes( [FromQuery] CashFlowSpecParams @params, int accId )
         {
-            var incomes= await _userProfileService.GetCashFlowsAsync ( @params, accId );
-            return new ApiResponse<List<CashFlowDto>> ( 200, "", incomes );
+            var incomes= await _userProfileService.GetCashFlowsAsync ( @params, accId );;
+            return incomes;
         }
         
         [HttpDelete ( "delete-cashflow" )]

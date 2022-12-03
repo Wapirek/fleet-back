@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Fleet.Core.ApiModels;
 using Fleet.Core.Dtos;
 using Fleet.Core.Entities;
+using Fleet.Core.Helpers;
 using Fleet.Core.Specifications.Params;
 
 namespace Fleet.Core.Interfaces.Services
@@ -22,6 +23,6 @@ namespace Fleet.Core.Interfaces.Services
 
         Task<CashFlowEntity> GetCashFlowAsync( string source, int accountId );
 
-        Task<IReadOnlyList<CashFlowDto>> GetCashFlowsAsync( CashFlowSpecParams @params, int accountId );
+        Task<Pagination<CashFlowDto>> GetCashFlowsAsync( CashFlowSpecParams @params, int accountId );
     }
 }
