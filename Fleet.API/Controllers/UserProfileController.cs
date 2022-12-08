@@ -26,40 +26,47 @@ namespace Fleet.API.Controllers
         }
 
         [HttpPost ( "add-cashflow" )]
-        public async Task<ApiResponse<CashFlowDto>> AddIncomeAsync( [FromBody] CashFlowDto cashFlowDto )
+        public async Task<ActionResult<ApiResponse<CashFlowDto>>> AddIncomeAsync( [FromBody] CashFlowDto cashFlowDto )
         {
-            return await _userProfileService.CreateCashFlowAsync ( cashFlowDto );
+            var result = await _userProfileService.CreateCashFlowAsync ( cashFlowDto );
+            if( !string.IsNullOrEmpty ( result.Message ) )
+                return BadRequest ( result );
+            return Ok ( result );
         }
         
         [HttpPost ( "update-cashflow" )]
-        public async Task<ApiResponse<CashFlowDto>> UpdateIncome( [FromBody] CashFlowDto cashFlowDto )
+        public async Task<ActionResult<ApiResponse<CashFlowDto>>> UpdateIncome( [FromBody] CashFlowDto cashFlowDto )
         {
-            return await _userProfileService.UpdateCashFlowAsync ( cashFlowDto );
+            var result = await _userProfileService.UpdateCashFlowAsync ( cashFlowDto );
+            if( !string.IsNullOrEmpty ( result.Message ) )
+                return BadRequest ( result );
+            return Ok ( result );
         }
         
         [HttpGet ( "get-cashflow" )]
-        public async Task<ApiResponse<CashFlowDto>> GetIncome( [FromBody] CashFlowLittleDto cashFlowDto )
+        public async Task<ActionResult<ApiResponse<CashFlowDto>>> GetIncome( [FromBody] CashFlowLittleDto cashFlowDto )
         {
             var income = await _userProfileService.GetCashFlowAsync ( cashFlowDto.Source, cashFlowDto.AccountId );
             var incomeToReturn = _map.Map<CashFlowDto> ( income );
             return incomeToReturn == null
-                    ? new ApiResponse<CashFlowDto> ( 400, "Nie znaleziono przychodu", null )
-                    : new ApiResponse<CashFlowDto> ( 200, "", incomeToReturn )
-                ;
+                ? BadRequest ( new ApiResponse<CashFlowDto> ( 400, "Nie znaleziono przychodu", null ) )
+                : Ok ( new ApiResponse<CashFlowDto> ( 200, "", incomeToReturn ) );
         }
         
         [HttpGet ( "get-cashflows" )]
-        public async Task<Pagination<CashFlowDto>> GetIncomes( [FromQuery] CashFlowSpecParams @params, int accId )
+        public async Task<ActionResult<Pagination<CashFlowDto>>> GetIncomes( [FromQuery] CashFlowSpecParams @params, int accId )
         {
             var incomes= await _userProfileService.GetCashFlowsAsync ( @params, accId );;
-            return incomes;
+            return Ok ( incomes );
         }
         
-        [HttpDelete ( "delete-cashflow" )]
-        public async Task<ApiResponse> GetIncomes( [FromBody] CashFlowLittleDto cashFlowDto )
+        [HttpPost ( "delete-cashflow" )]
+        public async Task<ActionResult<ApiResponse>> GetIncomes( [FromBody] CashFlowLittleDto cashFlowDto )
         {
-            var income = await _userProfileService.DeleteCashFlowAsync ( cashFlowDto );
-            return income;
+            var result = await _userProfileService.DeleteCashFlowAsync ( cashFlowDto );
+            if( !string.IsNullOrEmpty ( result.Message ) )
+                return BadRequest ( result );
+            return Ok ( result );
         }
     }
 }

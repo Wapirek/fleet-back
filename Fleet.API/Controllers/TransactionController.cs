@@ -21,7 +21,7 @@ namespace Fleet.API.Controllers
         }
 
         [HttpPost ( "transaction-add" )]
-        public async Task<ApiResponse<TransactionDto>> AddTransaction([FromBody] TransactionDto transactionDto)
+        public async Task<ActionResult<ApiResponse<TransactionDto>>> AddTransaction([FromBody] TransactionDto transactionDto)
         {
             var result = await _transactionService.CreateTransaction ( transactionDto );
             var response = (TransactionDto) result.Response;
@@ -29,9 +29,11 @@ namespace Fleet.API.Controllers
             {
                 await _userProfileService.UpdateAccountBalanceAsync ( response.AccountId, response.TotalPaid,
                     response.TransactionDirectionId );
-            }
 
-            return result;
+                return Ok ( new ApiResponse<TransactionDto> ( 200, "", response ) );
+            }
+            
+            return BadRequest(new ApiResponse<TransactionDto> ( 400, result.Message, null ));
         }
     }
 }
