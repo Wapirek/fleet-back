@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Fleet.Core.ApiModels;
 using Fleet.Core.Dtos;
 using Fleet.Core.Entities;
+using Fleet.Core.Enums;
+using Fleet.Core.Extensions;
 using Fleet.Core.Interfaces.Repositories;
 using Fleet.Core.Interfaces.Services;
 using Fleet.Core.Specifications;
@@ -24,12 +27,64 @@ namespace Fleet.Infrastructure.Services
         public async Task<ApiResponse<TransactionDto>> CreateTransaction( TransactionDto transactionDto )
         {
             var transactionToCreate = new TransactionEntity();
-         
-            var placeSpec = new ProductPlaceSpecification ( transactionDto.Place );
-            var place = await _unitOfWork.Repository<ProductPlaceEntity>().GetEntityWithSpecAsync ( placeSpec );
+            if( transactionDto.TransactionType == ETransactionType.Simply.GetnEnumMemberValue() )
+            {
+                transactionToCreate = CreateSimplyTransaction ( transactionDto );
+                _unitOfWork.Repository<TransactionEntity>().Add ( transactionToCreate );
+            }
+            else
+            {
+                var placeSpec = new ProductPlaceSpecification ( transactionDto.Place );
+                var place = await _unitOfWork.Repository<ProductPlaceEntity>().GetEntityWithSpecAsync ( placeSpec );
 
-            if( place == null)
-                return new ApiResponse<TransactionDto> ( 200, "Utwórz najpierw miejse transakcji", null );
+                if( place == null)
+                    return new ApiResponse<TransactionDto> ( 200, "Utwórz najpierw miejse transakcji", null );
+                transactionToCreate = await CreateComplexTransaction ( transactionDto );
+                _unitOfWork.Repository<TransactionEntity>().Add ( transactionToCreate );
+                transactionToCreate.TransactionPostions = new List<TransactionPositionsEntity>();
+                foreach ( var position in transactionDto.Positions )
+                {
+                    var res = await CreateTransactionPosition ( position, place.Id, transactionDto.AccountId );
+                    
+                    if( string.IsNullOrEmpty ( res.Message ) )
+                    {
+                        var transactionPosition = (TransactionPositionsEntity) res.Response;
+                        transactionToCreate.TransactionPostions.Add ( transactionPosition );
+                        _unitOfWork.Repository<TransactionPositionsEntity>().Add ( transactionPosition );
+                    }
+                    else
+                    {
+                        return new ApiResponse<TransactionDto> ( 400, "Któraś z pozycji transakcji jest nie poprawna", null );
+                    }
+                }
+            }
+            
+            
+            
+            
+            await _unitOfWork.CompleteAsync();
+            return new ApiResponse<TransactionDto> ( 200, "", transactionDto );
+        }
+
+        private TransactionEntity CreateSimplyTransaction(TransactionDto transactionDto)
+        {
+            var transactionToCreate = new TransactionEntity();
+            transactionToCreate.TransactionDate = DateTime.Now;
+            transactionToCreate.TransactionDirectionId = 1;
+            transactionToCreate.TransactionPostions = null;
+            transactionToCreate.Currency = "PLN";
+            transactionToCreate.TransactionName = DateTime.Now.ToString().Substring(0, 10);
+
+            transactionToCreate.AccountId = transactionDto.AccountId;
+            transactionToCreate.TotalPaid = transactionDto.TotalPaid;
+            
+
+            return transactionToCreate;
+        }
+
+        private async Task<TransactionEntity> CreateComplexTransaction( TransactionDto transactionDto )
+        {
+            var transactionToCreate = new TransactionEntity();
             
             
             var amountTransactions = await AmountTransactionNames ( transactionDto.TransactionDate,
@@ -42,22 +97,10 @@ namespace Fleet.Infrastructure.Services
             transactionToCreate.TransactionDirectionId = transactionDto.TransactionDirectionId;
             transactionToCreate.AccountId = transactionDto.AccountId;
 
-            _unitOfWork.Repository<TransactionEntity>().Add ( transactionToCreate );
-            await _unitOfWork.CompleteAsync();
             
-            foreach ( var position in transactionDto.Positions )
-            {
-                var res = await CreateTransactionPosition ( position, place.Id, transactionDto.AccountId );
-                if( string.IsNullOrEmpty ( res.Message ) )
-                {
-                    var transactionPosition = (TransactionPositionsEntity) res.Response;
-                    transactionPosition.TransactionId = transactionToCreate.Id;
-                    _unitOfWork.Repository<TransactionPositionsEntity>().Add ( transactionPosition );
-                }
-            }
             
-            await _unitOfWork.CompleteAsync();
-            return new ApiResponse<TransactionDto> ( 200, "", transactionDto );
+            
+            return transactionToCreate;
         }
 
         /// <summary>
@@ -92,7 +135,6 @@ namespace Fleet.Infrastructure.Services
             {
                 positionToCreate.ProductId = product.Id;
                 positionToCreate.Product = product;
-                
             }
             // jeśli nie to tworzę nowy
             else

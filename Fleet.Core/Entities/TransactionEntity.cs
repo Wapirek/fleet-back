@@ -30,6 +30,9 @@ namespace Fleet.Core.Entities
         public int AccountId { get; set; }
         public AccountEntity Account { get; set; }
         
+        /// <summary>
+        /// 1 - wydatek, 2 - przychód
+        /// </summary>
         public int TransactionDirectionId { get; set; }
         public TransactionDirectionEntity TransactionDirection { get; set; }
         

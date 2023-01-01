@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Fleet.Core.Enums;
 
 namespace Fleet.Core.Dtos
 {
@@ -12,6 +13,7 @@ namespace Fleet.Core.Dtos
         public string Place { get; set; }
         public int AccountId { get; set; }
         public int TransactionDirectionId { get; set; }
+        public string TransactionType { get; set; }
         public List<TransactionPositionsDto> Positions { get; set; }
     }
 }
